@@ -1,0 +1,4 @@
+MailReader=thunderbird
+FileManager=nemo
+WebBrowser=debian-sensible-browser
+TerminalEmulator=gnome-terminal

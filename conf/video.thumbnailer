@@ -1,0 +1,4 @@
+[Thumbnailer Entry]
+TryExec=ffmpegthumbnailer
+Exec=ffmpegthumbnailer -s %s -i %i -o %o
+MimeType=video/x-msvideo;video/msvideo;video/x-msvideo;video/x-dv;video/vnd.mpegurl;video/x-m4v;video/quicktime;video/x-sgi-movie;video/mp4;video/mpeg;video/vnd.mpegurl;video/quicktime;video/x-flv;video/x-ogm+ogg;video/3gpp;video/x-mpeg;video/x-ms-wmv;video/x-ms-asf;video/x-matroska;' >> /usr/share/thumbnailers/video.thumbnailer

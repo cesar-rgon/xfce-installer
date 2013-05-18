@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=aMule-daemon - Finalizar
+Exec=gksudo /etc/init.d/amule-daemon stop
+Icon=amule
+Terminal=false
+Type=Application
+Categories=Network;P2P;
+Comment=Finalizar servidor aMule para descargas P2P
+

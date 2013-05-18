@@ -1,0 +1,33 @@
+#!/bin/sh
+
+CHDIR=/usr/share/utorrent-server-v3_0
+NAME=utserver
+OPTIONS="-logfile"
+DAEMON=$CHDIR/$NAME
+STOP_TIMEOUT=5
+
+case "$1" in
+    start)
+        echo "Starting $NAME..."
+        start-stop-daemon --start --quiet --make-pidfile --pidfile $CHDIR/utserver.pid --chdir $CHDIR --background --exec $DAEMON -- $OPTIONS
+        echo "Done."
+        ;;
+    stop)
+        echo "Stopping $NAME..."
+        start-stop-daemon --stop --quiet --exec $DAEMON --retry $STOP_TIMEOUT --oknodo
+        rm $CHDIR/utserver.pid
+        echo "Done."
+        ;;
+    restart)
+        echo "Restarting $NAME..."
+        start-stop-daemon --stop --quiet --exec $DAEMON --retry $STOP_TIMEOUT --oknodo
+        rm $CHDIR/utserver.pid
+        start-stop-daemon --start --quiet --make-pidfile --pidfile $CHDIR/utserver.pid --chdir $CHDIR --background --exec $DAEMON -- $OPTIONS
+        echo "Done."
+        ;;
+    *)
+        echo "Usage: /etc/init.d/utorrent-daemon {start|stop|restart}"
+        exit 2
+        ;;
+esac
+exit 0

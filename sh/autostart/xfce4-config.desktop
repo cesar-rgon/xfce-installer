@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=xfce4-config
+Exec=bash /usr/share/xfce4/xfce4-config.sh ARGUMENTO
+Type=Application
+Icon=
+Comment=Configuracion de Xfce. Debe desactivarse despues del primer inicio de sesion.

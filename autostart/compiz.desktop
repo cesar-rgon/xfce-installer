@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=compiz
+Comment=Decorador de ventanas con efectos 3D
+Exec=compiz --replace
+Terminal=false
