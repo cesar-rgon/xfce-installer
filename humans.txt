@@ -1,0 +1,16 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    <name> Cesar Rodriguez Gonzalez <role> Founder
+    <name> Isidro Rodriguez Gonzalez <role> Colaborator 
+
+# THANKS
+
+    
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    CSS Reset, Modernizr
