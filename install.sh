@@ -5,7 +5,7 @@
 function inicializaVariables()
 {
    autor="Cesar Rodriguez Gonzalez"
-   descripcion="Mouse Script. Instalador Xfce con aplicaciones" # Título de fondo
+   descripcion="Xfce Installer. Instalador Xfce con aplicaciones" # Título de fondo
    version="1.0"
    ultimaFechaModificacion="02-05-2013"
    distribucionProbada="Ubuntu Server 12.04, 12.10 y 13.04"
