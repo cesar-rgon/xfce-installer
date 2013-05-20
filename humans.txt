@@ -12,5 +12,5 @@
 
 # TECHNOLOGY COLOPHON
 
-    HTML5, CSS3
-    CSS Reset, Modernizr
+    HTML5, CSS3, JavaScript
+    CSS Reset, Modernizr, H5BP

@@ -433,6 +433,64 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
        transform:translate3d(0,0,0);
 }
 
+/* Menu
+================================================= */
+
+/* Visit http://www.menucool.com/horizontal/javascript-menu for source code and other menu CSS templates */
+
+#sse2 {
+    /*You can decorate the menu's container, such as adding background images through this block*/
+  margin-top:10px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+#sses2 {
+    /* margin:0 auto; This will make the menu center-aligned. Removing this line will make the menu align left.*/
+}
+
+#sses2 ul { 
+    position: relative;
+    list-style-type: none;
+    float:left;
+    padding:0;margin:0;
+}
+
+#sses2 li {
+    float:left;
+    list-style-type: none;
+    padding:0;margin:0;background-image:none;
+}
+
+/*CSS for background bubble*/
+#sses2 li.highlight {
+    background: #036 url('../images/menu-bar/mb2_2.gif') no-repeat center bottom;
+    top:0px;
+    height:30px;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    z-index: 1;
+    position: absolute;
+    overflow:hidden;
+}
+
+#sses2 li a {
+    height:30px;
+    padding-top: 8px;
+    margin: 0 20px;/*used to adjust the distance between each menu item. Now the distance is 20+20=40px.*/
+    color: #fff;
+    font: normal 14px arial;
+    text-align: center;
+    text-decoration: none;
+    float: left;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
 
 /* Helper classes
 ================================================= */
@@ -573,6 +631,12 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
   #slider img {
     max-width: 284px;
   }
+  #sses2 li a {
+    height:30px;
+    padding-top: 8px;
+    margin: 0 3px;/*used to adjust the distance between each menu item. Now the distance is 20+20=40px.*/
+    font: normal 12px arial;
+  }
 }
 
 .bold {
@@ -586,3 +650,5 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
 .clear {
 	clear: both;
 }
+
+
