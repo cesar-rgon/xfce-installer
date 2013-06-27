@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=TV en linux
-Exec=/usr/share/TVenLinux/TVenLinux.sh
-Icon=tvtime
-Terminal=false
-Type=Application
-Categories=AudioVideo;
-Comment=Canales de television online en Linux

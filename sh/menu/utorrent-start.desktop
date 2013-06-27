@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=utorrent-daemon - Iniciar
-Exec=gksudo /etc/init.d/utorrent-daemon start
-Icon=utorrent
-Terminal=false
-Type=Application
-Categories=Network;P2P;
-Comment=Iniciar servidor utorrent para descargas P2P
-

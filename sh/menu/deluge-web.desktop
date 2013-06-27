@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Deluge Web
-Exec=xdg-open http://localhost:8112
-Icon=deluge
-Terminal=false
-Type=Application
-Categories=Network;P2P;
-Comment=Nevagador web cliente que se conecta al servidor Deluged

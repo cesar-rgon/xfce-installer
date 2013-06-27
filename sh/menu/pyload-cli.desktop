@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=pyLoad Web
-Exec=xdg-open http://localhost:8000
-Icon=pyload
-Terminal=false
-Type=Application
-Categories=Network;P2P;
-Comment=Nevagador web cliente que se conecta al servidor pyLoad
-

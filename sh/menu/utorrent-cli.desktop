@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=utorrent
-Exec=xdg-open http://localhost:8080/gui
-Icon=utorrent
-Terminal=false
-Type=Application
-Categories=Network;P2P;
-Comment=Nevagador web cliente que se conecta al servidor utorrent
-
