@@ -12,7 +12,7 @@ DAEMON=/usr/bin/pyLoadCore
 STOP_TIMEOUT=3
 PIDFILE=/var/run/$NAME.pid
 OPTIONS="--daemon"
-USER=USERNAME
+USER=%USER%
 
 export PATH="${PATH:+$PATH:}/sbin"
 

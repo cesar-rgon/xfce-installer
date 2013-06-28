@@ -1,76 +1,91 @@
 #!/bin/bash
-# Se comprueba si el script se está ejecutando como usuario administrador (root tiene id = 0)
+
+# Arguments
+title="${1}"
+description="${2}"
+terminalMessage1="${3}"
+terminalMessage2="${4}"
+terminalMessage3="${5}"
+terminalMessage4="${6}"
+user="${7}"
+message1="${8}"
+message2="${9}"
+utorrentWebDescription="${10}"
+utorrentStartName="${11}"
+utorrentStartDescription="${12}"
+utorrentStopName="${13}"
+utorrentStopDescription="${14}"
+
+# Other variables
+tempDir="/tmp/xfce-installer.tmp"
+logFile="$tempDir/log.txt"
+dialogWidth=$((`tput cols` - 4))
+dialogHeight=$((`tput lines` - 6))
+
+# Check if the script is being running like root user (root user has id equal to 0)
 if [ $(id -u) != 0 ]
 then
-	echo "Este script debe ser ejecutado como usuario administrador."
-	echo "Para ejecutar el script: sudo bash ./utorrent.sh"
-	echo "Si el script tiene permiso de ejecucion basta con: sudo ./utorrent.sh"
-	echo "Para dar permiso de ejecucion: chmod +x utorrent.sh"
+	echo ""
+	echo "$terminalMessage1"
+	echo "$terminalMessage2 sudo bash ./utorrent.sh"
+	echo "$terminalMessage3 sudo ./utorrent.sh"
+	echo "$terminalMessage4 chmod +x utorrent.sh"
+	echo ""
 	exit 1
 fi
 
 # Variables
 if [ `uname -i` == "x86_64" ]; then
-	fichUtorrent="utorrent-server-3.0-ubuntu-10.10-27079.x64.tar.gz"
+	utorrentFile="utorrent-server-3.0-ubuntu-10.10-27079.x64.tar.gz"
 else
-	fichUtorrent="utorrent-server-3.0-ubuntu-10.10-27079.tar.gz"
+	utorrentFile="utorrent-server-3.0-ubuntu-10.10-27079.tar.gz"
 fi
 
-urlUtorrent="http://ll.download3.utorrent.com/linux/$fichUtorrent"
-dirInst="/usr/share"
-dirUtorrent="utorrent-server-v3_0"
+utorrentURL="http://download.utorrent.com/linux/$utorrentFile"
+installationFolder="/usr/share"
 
-# Se elimina posible fichero de utorrent de una descarga anterior
-comandos="rm /var/cache/apt/archives/$fichUtorrent 2>/dev/null;"
+# Delete previous uTorrent's file downloaded before.
+commands="rm /var/cache/apt/archives/$utorrentFile 2>/dev/null;"
 
-# Se descarga uTorrent
-comandos+="echo 'Descargando uTorrent ...' >>log.txt;"
-comandos+="echo 'Descargando uTorrent ...';"
-comandos+="wget -P /var/cache/apt/archives $urlUtorrent 2>&1;"
+# Download uTorrent
+commands+="echo $message1 >>$logFile;"
+commands+="echo $message1;"
+commands+="wget -P /var/cache/apt/archives $utorrentURL 2>&1;"
 
-# Se descomprime a la carpeta marcada por la variable dirInst
-comandos+="echo 'Descomprimiendo uTorrent ...' >>log.txt;"
-comandos+="echo 'Descomprimiendo uTorrent ...';"
-comandos+=" tar -xzf /var/cache/apt/archives/$fichUtorrent -C $dirInst 2>>log.txt;"
+# Decompress to system folder
+commands+="echo 'Descomprimiendo uTorrent ...' >>$logFile;"
+commands+="echo 'Descomprimiendo uTorrent ...';"
+commands+=" tar -xzf /var/cache/apt/archives/$utorrentFile -C $installationFolder 2>>$logFile;"
 
-# Se instala librería necesaria
-comandos+="echo 'Instalando libreria ...' >>log.txt;"
-comandos+="echo 'Instalando libreria ...';"
-comandos+=" apt-get -y install libssl0.9.8 --fix-missing 2>>log.txt;"
+# Install neccesary library
+commands+="echo $message2 >>$logFile;"
+commands+="echo $message2;"
+commands+=" apt-get -y install libssl0.9.8 --fix-missing 2>>$logFile;"
 
-# Se copia fichero que permite iniciar/parar utorrent como demonio
-comandos+="cp sh/utorrent-daemon /etc/init.d 2>>log.txt;"
+# Copy utorrent's startup script to the system
+commands+="cp ./sh/utorrent-daemon /etc/init.d 2>>$logFile;"
+commands+="sed -i \"s/%USER%/$user/g\" /etc/init.d/utorrent-daemon 2>>$logFile;"
 
-# Se copian los lanzadores del menú para iniciar y finalizar utorrent-daemon
-comandos+="cp ./menu/utorrent-cli.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/utorrent-start.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/utorrent-stop.desktop /usr/share/applications 2>>log.txt;"
+# Copy menu launchers to start and finish utorrent and application's web client.
+commands+="cp ./menu/utorrent-cli.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$utorrentWebDescription/g\" /usr/share/applications/utorrent-cli.desktop 2>>$logFile;"
+commands+="cp ./menu/utorrent-start.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$utorrentStartName/g\" /usr/share/applications/utorrent-start.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$utorrentStartDescription/g\" /usr/share/applications/utorrent-start.desktop 2>>$logFile;"
+commands+="cp ./menu/utorrent-stop.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$utorrentStopName/g\" /usr/share/applications/utorrent-stop.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$utorrentStopDescription/g\" /usr/share/applications/utorrent-stop.desktop 2>>$logFile;"
 
-# Se Crean enlaces simbólicos para que utorrent se inicie automáticamente desde consola
-comandos+="update-rc.d -f utorrent-daemon defaults 2>>log.txt;"
-# En caso de querer quitar este inicio de utorrent más adelante, escribir en consola: # update-rc.d -f utorrent-daemon remove
+# Create utorrent startup links
+commands+="update-rc.d -f utorrent-daemon defaults 2>>$logFile;"
+# To remove them: # update-rc.d -f utorrent-daemon remove
 
-# No se crea lanzador de autoarranque con el inicio de sesión de Xfce ya que inicia automáticamente desde consola.
-# En caso de necesitar el autoarranque de Xfce, descomentar las siguientes líneas. 
-#comandos+="echo 'Creando autoarranque en el inicio de sesión ...' >>log.txt;"
-#comandos+="echo 'Creando autoarranque en el inicio de sesión ...';"
-#comandos+="echo '[Desktop Entry]' > /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Name=uTorrent Server' >> /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Exec=bash $dirInst/$dirUtorrent/utorrent.sh' >> /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Type=Application' >> /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Categories=Network;FileTransfer' >> /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Icon=' >> /etc/xdg/autostart/utorrent.desktop;"
-#comandos+="echo 'Comment=Descargas P2P de archivos .torrent' >> /etc/xdg/autostart/utorrent.desktop;"
+# Create utorrent log folder
+commands+="mkdir /var/log/utorrent 2>>$logFile;"
+commands+="chown $user:$user /var/log/utorrent 2>>$logFile;"
 
-# Este script se usaría para el autoarranque de utorrent en Xfce.
-#comandos+="echo 'Creando script de lanzamiento ...' >>log.txt;"
-#comandos+="echo 'Creando script de lanzamiento ...';"
-#comandos+="echo '#!/bin/bash' >$dirInst/$dirUtorrent/utorrent.sh;"
-#comandos+="echo 'cd $dirInst/$dirUtorrent' >>$dirInst/$dirUtorrent/utorrent.sh;"
-#comandos+="echo './utserver &' >>$dirInst/$dirUtorrent/utorrent.sh;"
-
-# Se ejecutan todos los comandos
-eval $comandos | dialog --title "$2" --backtitle "$3" --progressbox 20 76
+# Execute all commands
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 
 
 

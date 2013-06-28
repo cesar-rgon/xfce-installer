@@ -2,1140 +2,1171 @@
 ########################################################################################################################
 # VARIABLES
 ########################################################################################################################
-function inicializaVariables()
+function initVariables()
 {
-   autor="Cesar Rodriguez Gonzalez"
-   descripcion="Xfce Installer. Instalador Xfce con aplicaciones" # Título de fondo
-   version="1.0"
-   ultimaFechaModificacion="02-05-2013"
-   distribucionProbada="Ubuntu Server 12.04, 12.10 y 13.04"
-   versionUbuntu=`lsb_release -rs`
-   codigoUbuntu=`lsb_release -cs`
-   anchoDialogo=$((`tput cols` - 4))
-   altoDialogo=$((`tput lines` - 6))
-   totalPasos=13 # Numero total de pasos que tiene la instalacion
-   accion=1 # Accion=0. Se pulsa botón Aceptar. Accion=1. Se pulsa botón cancelar.
-   usuario="" # Nombre del usuario linux
-   instalaGdebi=0 # 0.No se ha instalado gdebi. 1, sí se ha instalado.
-   instalaNemo=0  # Por defecto no se instala el explorador de ficheros Nemo (sólo Thunar).
-   instalaLightdm=0   # Indica si se instala la pantalla de autenticacion de usuario y entrada a Xfce.
-   instalaNetworkManager=0 # Indica si se instala Network Manager
-   inicioAutomatico=0 # Inicio automático del usuario. 0 No inicia automáticamente. 1 sí lo hace.
-   programasEliminar="byobu xterm" # Paquetes de la instalacion de Xfce a eliminar porque no usamos
-   configuraAmuleDaemon=0 # Por defecto no se accede a la pantalla de configurar aMule-Daemon (0=false, 1=true)
-   instalaDeluged=0 # 0.No se ha instalado deluged. 1, sí se ha instalado.
-   instalaPyload=0 # 0.No se ha instalado pyLoad. 1, sí se ha instalado.
-   instalaQbittorrentDaemon=0 # 0.No se ha instalado qbittorrent nox daemon. 1, sí se ha instalado.
-   instalaUtorrent=0 # 0.No se ha instalado utorrent. 1, sí se ha instalado.
-   instalaCompiz=0 # 0.No se ha instalado compiz. 1, sí se ha instalado.
-   escritorioXfce="ESCRITORIO:\n---------------------------------------------------------------\n   Xfce (X Free Choresterol Environment)" # Escritorio Xfce
-   gestorEscritorios="GESTOR DE ESCRITORIOS:\n---------------------------------------------------------------\n   Lightdm (Light Desktop Manager con tema Gtk Greeter)\n" # Gestor de escritorios Lightdm
-   
-   # Además de los paquetes base, se van a ir añadiendo paquetes opcionales segun la selección de programas a instalar por el usuario.
-   paquetesRepositorio="dmz-cursor-theme gnome-icon-theme-full language-pack-gnome-es shimmer-wallpapers xdg-utils xfce4-datetime-plugin zenity"
-if [ $versionUbuntu == "12.04" ]; then
-	paquetesRepositorio+=" shimmer-themes-greybird"
-else
-	paquetesRepositorio+=" shimmer-themes"
-fi
-
-   # Programas variados a instalar para el escritorio. Son los programas "base" o comunes a toda instalacion
-   programasBase="APLICACIONES BASE:\n
+	author="Cesar Rodriguez Gonzalez"
+	englishTranslationAuthors="Cesar Rodriguez Gonzalez. Isidro Rodriguez Gonzalez"
+	version="1.1"
+	lastDateModified="27-06-2013"
+	ubuntuVersion=`lsb_release -rs`
+	dialogWidth=$((`tput cols` - 4))
+	dialogHeight=$((`tput lines` - 6))
+	totalSteps=13 					# Total number of steps of the installation
+	tempDir="/tmp/xfce-installer.tmp"
+	logFile="$tempDir/log.txt"
+	action=1 						# Action=0. Accept button is pressed. Accion=1. Cancel button is pressed.
+	user="" 						# Linux user name
+	gdebiInstalled=0 				# 0.Gdebi is not installed. 1.Gdebi is installed.
+	nemoInstalled=0  				# 0.Nemo file browser is not installed. 1.Nemo file browser is installed.
+	lightdmInstalled=0   			# 0.Lightdm application is not installed. 1.Lightdm application is installed.
+	linuxTVInstalled=0				# 0.Linux TV is not installed. 1. Linux TV is installed.
+	networkManagerInstalled=0 		# 0.Network Manager application is not installed. 1.Network Manager application is installed.
+	automaticLogin=0			 	# 0.Not user automatic login. 1. User automatic login.
+	amuleDaemonInstalled=0 			# 0.Amule daemon application is not installed. 1.Amule daemon application installed.
+	delugedInstalled=0 				# 0.Deluge application is not installed. 1.Deluge application installed.
+	pyloadInstalled=0 				# 0.Pyload application is not installed. 1.Pyload application is installed.
+	qbittorrentDaemonInstalled=0 	# 0.Qbittorrent daemon application is not installed. 1. Qbittorrent daemon application is installed.
+	utorrentInstalled=0 			# 0.uTorrent application is not installed. 1. uTorrent application is installed.
+	compizInstalled=0 				# 0.Compiz application is not installed. 1. Compiz application is installed.
+	systemMonitorInstalled=0		# 0.Gnome system monitor is not installed. 1. Gnome system monitor is installed.
+	packagesToDelete="byobu xterm" 	# Packages to delete at the end of the installation process.
+	xfceDesktop="$desktop:\n---------------------------------------------------------------\n   Xfce: X Free Choresterol Environment"
+	desktopManagerSummary="$desktopManager:\n---------------------------------------------------------------\n   $lightdmDescription\n"
+	# Ubuntu's repository packages to install
+	repositoryPackages="dmz-cursor-theme gnome-icon-theme-full language-selector-gnome shimmer-themes shimmer-wallpapers xdg-utils xfce4-datetime-plugin zenity"
+	# Common programs installed always.
+	basePrograms="$baseProgramsDescription:\n
 ---------------------------------------------------------------\n
-   DateTime (fecha y calendario para el panel de tareas de Xfce)\n
-   Faenza (tema de iconos del sistema)\n
-   Greybird (tema de escritorio)\n
-   Mscorefonts (Fuentes comunes de Microsoft)\n
-   Zenity (Dialogos en ventanas)\n"
-   
-   programasOpcionales="APLICACIONES OPCIONALES:\n
----------------------------------------------------------------\n" # Se van a ir añadiendo las descripciones de los programas opcionales seleccionados por el usuario.
-
-   # Paquetes opcionales del repositorio estándar (paquetes del repositorio - descripción de cada utilidad)
-   abiword=("abiword" "  Abiword (Editor ligero de documentos word)\n")
-   aMule=("amule" "  aMule (descargas P2P en la red eDonkey)\n")
-   aMuleDaemon=("amule amule-daemon amule-utils-gui" "  aMule Daemon (Servidor aMule para descargas P2P en la red eDonkey)\n")
-   alacarte=("alacarte"  "  Alacarte (editor del menu de aplicaciones)\n")
-   audacious=("audacious" "  Audacious (reproductor de audio mp3 estilo WinAmp)\n")
-   bleachbit=("bleachbit" "  Bleachbit (utilidad de limpieza de ficheros temporales)\n")
-   bluefish=("bluefish" "  Bluefish (entorno de desarrollo y programacion web)\n")
-   calibre=("calibre" "  Calibre (Visor, conversor y catalogador de ebooks)\n")
-   catfish=("catfish" "  Catfish (utilidad grafica para realizar busqueda de ficheros)\n")
-   chromium=("chromium-browser" "  Chromium (navegador web open-source basado en Chrome)\n")
-   centroSoftwareGnome=("software-center" "  Centro de software de Ubuntu (gestor de programas de Gnome)\n")
-   centroSoftwareLxde=("lubuntu-software-center" "  Centro de software de Lubuntu (gestor de programas ligero de Lxde)\n")
-   clementine=("clementine" "  Clementine (biblioteca de audio muy completa)\n")
-   codecsVideoAudio=("gstreamer0.10-ffmpeg gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly" "  Gstreamer (Paquete de codecs de video y audio)\n")
-   compiz=("compiz compizconfig-settings-manager fusion-icon" "  Compiz (Decorador de ventanas con efectos de escritorio 3D)\n")
-   compresor7zip=("p7zip-full" "  Compresor 7zip\n")
-   compresorRar=("rar unrar" "  Compresor / descompresor Rar\n")
-   deluge=("deluge" "  Deluge (descargas P2P mediante ficheros torrent)\n")
-   deluged=("deluge deluged deluge-webui" "  Deluged (descargas P2P mediante ficheros torrent. Demonio)\n")
-   dropbox=("nautilus-dropbox" "  Dropbox (sincronizacion con la nube)\n")
-   escaner=("simple-scan" "  Simple scan (escaneo de documentos)\n")
-   evince=("evince" "  Evince (visor de ficheros Pdf)\n")
-   evolution=("evolution" "  Evolution (gestor de correos tipo Office)\n")
-   fileroller=("file-roller thunar-archive-plugin" "  FileRoller (Ventana que gestiona compresion / descompresion de ficheros)\n") 
-   filezilla=("filezilla" "  Filezilla (cliente de transferencia ftp)\n")
-   firefox=("firefox firefox-locale-es" "  Firefox (navegador web de Mozilla)\n")
-   flashplugin=("flashplugin-installer" "  Plugin para reproducir videos Flash en navegadores web\n")
-   galculator=("galculator" "  Galculator (calculadora de Xfce)\n")
-   gcstar=("gcstar" "  Gcstar (Catalogador de peliculas, musica, libros, etc)\n")
-   gdebi=("gdebi" "  Gdebi (utilidad grafica para instalar paquetes deb)\n")
-   geany=("geany" "  Geany (editor de texto avanzado y entorno de programacion)\n")
-   gedit=("gedit" "  Gedit (editor de textos estandar y mas usado)\n")
-   gimp=("gimp" "  Gimp (editor de imagenes)\n")
-   gmplayer=("gnome-mplayer" "  Gmplayer (reproductor de video con interfaz grafica)\n")
-   gnumeric=("gnumeric" "  Gnumeric (Editor ligero de hojas de calculo)\n")
-   gparted=("gparted" "  Gparted (utilidad para administrar particiones del disco duro)\n")
-   gpicview=("gpicview" "  Gpicview (visor de fotos ligero)\n")
-   grabacion=("xfburn" "  Xfburn (grabacion de CD-rom y DVD-rom)\n")
-   hardinfo=("hardinfo" "  Hardinfo (utilidad de deteccion del hardware del equipo)\n")
-   impresora=("cups xfprint4 system-config-printer-gnome" "  Xfprint4 (gestiona impresion de documentos)\n")
-   impresoraPdf=("cups-pdf" "  Cups-pdf (impresora de documentos PDF)\n")
-   indicators=("indicator-applet-complete indicator-sound-gtk2 xfce4-indicator-plugin" "  Indicadores en el panel de sistema para red, mensajeria, sonido y otros\n")
-   integraConDominio=("likewise-open-gui" "  Likewise Open (Integra a dominio de Windows Server)\n")
-   jdk=("openjdk-6-jre" "  Java Development Kit (JRE para desarrolladores)\n")
-   jockey=("jockey-gtk" "  Jockey (Utilidad para instalar drivers. Solo Ubuntu 12.04)\n")
-   klavaro=("klavaro" "  Klavaro (curso de mecanografia)\n")
-   libreoffice=("libreoffice libreoffice-help-es libreoffice-l10n-es" "  LibreOffice (suite ofimatica de documentos, hojas de calculo, etc)\n")
-   lightdmGtkGreeter=("lightdm-gtk-greeter plymouth-theme-ubuntu-logo" "  Lightdm (Light Desktop Manager con tema Gtk Greeter)\n")
-   luckybackup=("luckybackup" "  LuckyBackup (Sincronizador de ficheros y copias de seguridad)\n")
-   lxtask=("lxtask" "  Lxtask (Monitor del sistema ligero)\n")
-   mcomix=("mcomix" "  Mcomix (Visor de comics)\n")
-   midori=("midori" "  Midori (navegador web ligero)\n")
-   mousepad=("mousepad" "  Mousepad (editor de textos sencillo y ligero)\n")
-   mplayer=("mplayer" "  Mplayer (reproductor de video desde consola)\n")
-   networkManager=("network-manager" "  Network Manager (gestor de perfiles de red cableada y wifi)\n")
-   notes=("xfce4-notes" "  Notas post-it de Xfce\n")
-   pidgin=("pidgin pidgin-extprefs pidgin-facebookchat" "  Pidgin (Chat multiprotocolo)\n")
-   pluginBateria=("xfce4-battery-plugin" "  Plugin de consumo de bateria para el panel de tareas de Xfce\n") 
-   powerManager=("xfce4-power-manager" "  Ventana de administracion de energia\n")
-   qbittorrent=("qbittorrent" "  Qbittorrent (descargas P2P mediante ficheros torrent)\n")
-   qbittorrentDaemon=("qbittorrent-nox" "  Qbittorrent Nox Daemon (descargas P2P mediante ficheros torrent. Demonio)\n")
-   redLocal=("gvfs-backends gvfs-fuse python-glade2 system-config-samba" "  Acceso a recursos compartidos de la red (Samba)\n")
-   remmina=("remmina" "  Remmina (Cliente de conexion remota SSH,SFTP,etc)\n")
-   screenshooter=("xfce4-screenshooter" "  Screenshooter (Salvapantallas de Xfce)\n")
-   selectorIdioma=("language-selector-gnome" "  Selector de idiomas\n")
-   synaptic=("synaptic" "  Synaptic (gestor de paquetes de instalacion)\n")
-   systemMonitor=("gnome-system-monitor" "  Monitor del sistema de Gnome\n")
-   terminalGnome=("gnome-terminal" "  Terminal de Gnome\n")
-   terminalXfce=("xfce4-terminal" "  Terminal de Xfce\n")
-   thumbnailGnome=("ffmpegthumbnailer" "  Previews de fotos y videos en el explorador de ficheros Nemo\n")
-   thunderbird=("thunderbird thunderbird-locale-es" "  Thunderbird (gestor de correos de Mozilla)\n")
-   tvEnLinux=("mplayer rtmpdump curl" "  TV en Linux (canales de television online)\n")
-   ubuntuone=("ubuntuone-control-panel" "  Ubuntu One (sincronizacion con la nube de Canonical)\n")
-   updateManager=("update-manager" "  Update Manager (Gestor de actualizaciones del sistema)\n")
-   userSettings=("gnome-system-tools" "  Ventana de gestion de usuarios del sistema\n")
-   videolan=("vlc" "  Videolan (reproductor de video con codecs propios e interfaz grafica)\n")
-   virtualbox=("virtualbox" "  Virtualbox (virtualiza maquinas virtuales con S.O.)\n")
-   webcam=("guvcview" "  Guvcview (captura fotos y videos de la camara web)\n")
-   wine=("wine" "  Wine (emulador de software de Windows)\n")
-   xbmc=("xbmc" "  Xbmc (centro multimedia de videos, fotos y musica)\n")
-   xscreensaver=("xscreensaver" "  Xscreensaver (salvapantallas de Xfce)\n")
+   $dateTimeDescription\n
+   $faenzaDescription\n
+   $greybirdDescription\n
+   $languageSelectorDescription\n
+   $mscorefontsDescription\n
+   $zenityDescription\n"
+	# Selected programs by user during installation process
+	optionalPrograms="$optionalProgramsSummary:\n
+---------------------------------------------------------------\n"
+	debUrls="" 						# Deb package URL list formed by selected programs by user to install.
+	debPackages="" 					# Deb package name list formed by selected programs by user to install.
+	
+	# Optional packages from standard repository (package name - description)
+	zipCompressor=("p7zip-full" "  $zipCompressorDescription\n")
+	abiword=("abiword" "  $abiwordDescription\n")
+	aMule=("amule" "  $aMuleDescription\n")
+	aMuleDaemon=("amule amule-daemon amule-utils-gui" "  $aMuleDaemonDescription\n")
+	alacarte=("alacarte"  "  $alacarteDescription\n")
+	audacious=("audacious" "  $audaciousDescription\n")
+	batteryPlugin=("xfce4-battery-plugin" "  $batteryPluginDescription\n") 
+	bleachbit=("bleachbit" "  $bleachbitDescription\n")
+	bluefish=("bluefish" "  $bluefishDescription\n")
+	burning=("xfburn" "  $burningDescription\n")
+	calibre=("calibre" "  $calibreDescription\n")
+	catfish=("catfish" "  $catfishDescription\n")
+	chromium=("chromium-browser" "  $chromiumDescription\n")
+	clementine=("clementine" "  $clementineDescription\n")
+	compiz=("compiz compizconfig-settings-manager fusion-icon" "  $compizDescription\n")
+	deluge=("deluge" "  $delugeDescription\n")
+	deluged=("deluge deluged deluge-webui deluge-console" "  $delugedDescription\n")
+	dropbox=("nautilus-dropbox" "  $dropboxDescription\n")
+	evince=("evince" "  $evinceDescription\n")
+	evolution=("evolution" "  $evolutionDescription\n")
+	fileroller=("file-roller thunar-archive-plugin" "  $filerollerDescription\n") 
+	filezilla=("filezilla" "  $filezillaDescription\n")
+	firefox=("firefox" "  $firefoxDescription\n")
+	flashplugin=("flashplugin-installer" "  $flashpluginDescription\n")
+	galculator=("galculator" "  $galculatorDescription\n")
+	gcstar=("gcstar" "  $gcstarDescription\n")
+	gdebi=("gdebi" "  $gdebiDescription\n")
+	geany=("geany" "  $geanyDescription\n")
+	gedit=("gedit" "  $geditDescription\n")
+	gimp=("gimp" "  $gimpDescription\n")
+	gmplayer=("gnome-mplayer" "  $gmplayerDescription\n")
+	gnomeSoftwareCenter=("software-center" "  $gnomeSoftwareCenterDescription\n")
+	gnomeTerminal=("gnome-terminal" "  $gnomeTerminalDescription\n")
+	gnomeThumbnail=("ffmpegthumbnailer" "  $gnomeThumbnailDescription\n")
+	gnumeric=("gnumeric" "  $gnumericDescription\n")
+	gparted=("gparted" "  $gpartedDescription\n")
+	gpicview=("gpicview" "  $gpicviewDescription\n")
+	hardinfo=("hardinfo" "  $hardinfoDescription\n")
+	indicators=("indicator-applet-complete indicator-sound-gtk2 xfce4-indicator-plugin" "  $indicatorsDescription\n")
+	jdk=("openjdk-6-jre" "  $jdkDescription\n")
+	jockey=("jockey-gtk" "  $jockeyDescription\n")
+	klavaro=("klavaro" "  $klavaroDescription\n")
+	libreoffice=("libreoffice" "  $libreofficeDescription\n")
+	lightdmGtkGreeter=("lightdm-gtk-greeter plymouth-theme-ubuntu-logo" "  $lightdmGtkGreeterDescription\n")	
+	likewiseOpen=("likewise-open-gui" "  $likewiseOpenDescription\n")
+	linuxTV=("mplayer rtmpdump curl" "  $linuxTVDescription\n")
+	localNetwork=("gvfs-backends gvfs-fuse python-glade2 system-config-samba" "  $localNetworkDescription\n")	
+	logViewer=("gnome-system-log" "  $logViewerDescription\n")
+	luckybackup=("luckybackup" "  $luckybackupDescription\n")	
+	lxdeSoftwareCenter=("lubuntu-software-center" "  $lxdeSoftwareCenterDescription\n")
+	lxtask=("lxtask" "  $lxtaskDescription\n")
+	mcomix=("mcomix" "  $mcomixDescription\n")
+	midori=("midori" "  $midoriDescription\n")
+	mousepad=("mousepad" "  $mousepadDescription\n")
+	mplayer=("mplayer" "  $mplayerDescription\n")
+	networkManager=("network-manager" "  $networkManagerDescription\n")
+	notes=("xfce4-notes" "  $notesDescription\n")
+	pidgin=("pidgin pidgin-extprefs pidgin-facebookchat" "  $pidginDescription\n")
+	powerManager=("xfce4-power-manager" "  $powerManagerDescription\n")
+	printer=("cups xfprint4 system-config-printer-gnome" "  $printerDescription\n")
+	printerPdf=("cups-pdf" "  $printerPdfDescription\n")
+	qbittorrent=("qbittorrent" "  $qbittorrentDescription\n")
+	qbittorrentDaemon=("qbittorrent-nox" "  $qbittorrentDaemonDescription\n")
+	rarCompressor=("rar unrar" "  $rarCompressorDescription\n")
+	remmina=("remmina" "  $remminaDescription\n")
+	scanner=("simple-scan" "  $scannerDescription\n")
+	schedule=("gnome-schedule" "$scheduleDescription\n")
+	screenshooter=("xfce4-screenshooter" "  $screenshooterDescription\n")
+	synaptic=("synaptic" "  $synapticDescription\n")
+	systemMonitor=("gnome-system-monitor" "  $systemMonitorDescription\n")
+	thunderbird=("thunderbird" "  $thunderbirdDescription\n")
+	ubuntuone=("ubuntuone-control-panel" "  $ubuntuoneDescription\n")
+	updateManager=("update-manager" "  $updateManagerDescription\n")
+	userSettings=("gnome-system-tools" "  $userSettingsDescription\n")
+	videoAudioCodecs=("gstreamer0.10-ffmpeg gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly" "  $videoAudioCodecsDescription\n")
+	videolan=("vlc" "  $videolanDescription\n")
+	virtualbox=("virtualbox" "  $virtualboxDescription\n")
+	webcam=("guvcview" "  $webcamDescription\n")
+	wine=("wine" "  $wineDescription\n")
+	xbmc=("xbmc" "  $xbmcDescription\n")
+	xfceTerminal=("xfce4-terminal" "  $xfceTerminalDescription\n")
+	xscreensaver=("xscreensaver" "  $xscreensaverDescription\n")
  
-   # Paquetes de repositorios de terceros (paquetes del repositorio - descripción de cada utilidad)
-   faenza=("faenza-icon-theme faience-icon-theme" "  Faenza (tema de iconos del sistema)\n")
-   grubcustomizer=("grub-customizer" "  GrubCustomizer (administrador de Grub2)\n")
-   chrome=("google-chrome-stable" "  Chrome (navegador web de Google)\n")
-   nemo=("nemo nemo-fileroller nemo-share" "  Nemo (Explorador de ficheros de Cinnamon)\n")
-   opera=("opera" "  Opera (navegador web de Opera Software)\n")
-   jdownloader=("jdownloader" "  jDownloader (gestor de descargas directas de servidores)\n")
-   jupiter=("jupiter" "  Jupiter (regula el rendimiento del sistema, modos idle-performance)\n")
+	# Third-party repository packages (repository packages - description)
+	faenza=("faenza-icon-theme faience-icon-theme" "  $faenzaDescription\n")
+	grubcustomizer=("grub-customizer" "  $grubcustomizerDescription\n")
+	chrome=("google-chrome-stable" "  $chromeDescription\n")
+	nemo=("nemo nemo-fileroller nemo-share" "  $nemoDescription\n")
+	opera=("opera" "  $operaDescription\n")
+	jdownloader=("jdownloader" "  $jdownloaderDescription\n")
    
-   # URLs de paquetes deb, nombre de cada paquete, descripción de cada utilidad
-   debGoogleEarth32=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_i386.deb" "google-earth-stable_current_i386.deb" "  Google Earth 32bits (Mapa del mundo 3D con fotos)\n")
-   debGoogleEarth64=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_amd64.deb" "google-earth-stable_current_amd64.deb" "  Google Earth 64bits (Mapa del mundo 3D con fotos)\n")
-   debPyload=("http://get.pyload.org/get/ubuntu" "pyload_linux.deb" "  pyLoad (gestor de descargas directas de servidores. Demonio. Ligero)\n")
-   debTeamviewer32=("http://www.teamviewer.com/download/teamviewer_linux.deb" "teamviewer_linux_32.deb" "  Teamviewer 32bits (acceso a/desde escritorio remoto)\n")
-   debTeamviewer64=("http://www.teamviewer.com/download/teamviewer_linux_x64.deb" "teamviewer_linux_64.deb" "  Teamviewer 64bits (acceso a/desde escritorio remoto)\n")
-   debSkype32=("http://www.skype.com/go/getskype-linux-beta-ubuntu-32" "skype_linux_32.deb" "  Skype 32bits (mensajeria por chat y voIp)\n")
-   debSkype64=("http://www.skype.com/go/getskype-linux-beta-ubuntu-64" "skype_linux_64.deb" "  Skype 64bits (mensajeria por chat y voIp)\n")
-   debSteam=("http://media.steampowered.com/client/installer/steam.deb" "steam_latest.deb" "  Steam (Plataforma online de juegos)\n")
-   urlsDeb="" # Se van a ir agregando las URLs de los paquetes deb a descargar según la seleccion de programas opcionales del usuario
-   paquetesDeb="" # Se van a ir agregando los nombres de los paquetes deb a descargar según la seleccion de programas opcionales del usuario
+	# Deb packages (deb package URL - package name - description)
+	debGoogleEarth32=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_i386.deb" "google-earth-stable_current_i386.deb" "  $debGoogleEarthDescription\n")
+	debGoogleEarth64=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_amd64.deb" "google-earth-stable_current_amd64.deb" "  $debGoogleEarthDescription\n")
+	debPyload=("http://get.pyload.org/get/ubuntu" "pyload_linux.deb" "  $debPyloadDescription\n")
+	debTeamviewer32=("http://www.teamviewer.com/download/teamviewer_linux.deb" "teamviewer_linux_32.deb" "  $debTeamviewerDescription\n")
+	debTeamviewer64=("http://www.teamviewer.com/download/teamviewer_linux_x64.deb" "teamviewer_linux_64.deb" "  $debTeamviewerDescription\n")
+	debSkype32=("http://www.skype.com/go/getskype-linux-beta-ubuntu-32" "skype_linux_32.deb" "  $debSkypeDescription\n")
+	debSkype64=("http://www.skype.com/go/getskype-linux-beta-ubuntu-64" "skype_linux_64.deb" "  $debSkypeDescription\n")
+	debSteam=("http://media.steampowered.com/client/installer/steam.deb" "steam_latest.deb" "  $debSteamDescription\n")
 
-   # Scripts de instalación aplicaciones, descripción de cada uno
-   scriptDeluged=("./sh/deluged.sh" "  Deluged (descargas P2P mediante ficheros torrent. Demonio)\n")
-   scriptPyload=("./sh/pyload.sh" "  pyLoad (gestor de descargas directas de servidores)\n")
-   scriptQbittorrentDaemon=("./sh/qbittorrent.sh" "  Qbittorrent Nox Daemon (descargas P2P mediante ficheros torrent. Demonio)\n")
-   scriptTvEnLinux=("./sh/tv-en-linux.sh" "  TV en linux (canales de television online)\n")
-   scriptUtorrent=("./sh/utorrent.sh" "  Utorrent (descargas P2P mediante ficheros torrent)\n")
-   scripts="" # Se van a ir agregando scripts de instalación según la selección de programas opcionales del usuario. Por defecto, siempre se instala LXDE Menu Editor
+	# Application scripts
+	scriptAmuleDaemon="./sh/amule-daemon.sh"
+	scriptDeluged="./sh/deluged.sh"
+	scriptLinuxTV="./sh/tv-en-linux.sh"
+	scriptPyload="./sh/pyload.sh"
+	scriptQbittorrentDaemon="./sh/qbittorrent.sh"
+	scriptUtorrent="./sh/utorrent.sh"
+	
+	# Third-party repositories (terminal commands - description - optional boolean value of installation process: 0. No install it. 1. Install it.)
+	chromeRepository=("" "$chromeRepositoryDescription" 0)
+	chromeRepository[0]="wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub 2>&1 | apt-key add - ; " 
+	chromeRepository[0]+="echo \"deb http://dl.google.com/linux/chrome/deb/ stable main #$chromeRepositoryDescription\" >> /etc/apt/sources.list.d/google-chrome.list"
 
-   # Repositorios de terceros para los programas correspondientes (comandos - descripción - Valor opcional booleano de instalación)
-   repositorioChrome=("" "Repositorio del navegador Google Chrome" 0)
-   repositorioChrome[0]="wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub 2>&1 | apt-key add - ; " 
-   repositorioChrome[0]+="echo \"deb http://dl.google.com/linux/chrome/deb/ stable main #${repositorioChrome[1]}\" >> /etc/apt/sources.list.d/google.list"
+	faenzaRepository=("add-apt-repository -y ppa:tiheum/equinox 2>&1" "$faenzaRepositoryDescription")
+	faenzaRepository[0]+=";sed -i \"s/ main/ main #$faenzaRepositoryDescription/g\" /etc/apt/sources.list.d/tiheum-equinox*.list"
+	#faenzaRepository=("" $faenzaRepositoryDescription)
+	#faenzaRepository[0]="apt-key add ./conf/faenza.key ; "
+	#faenzaRepository[0]+="echo \"deb http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #$faenzaRepositoryDescription\" > /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
+	#faenzaRepository[0]+="echo \"deb-src http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #$faenzaRepositoryDescription\" >> /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
 
-   repositorioFaenza=("add-apt-repository -y ppa:tiheum/equinox 2>&1" "Repositorio de tema de iconos Faenza")
-   repositorioFaenza[0]+=";sed -i 's/ main/ main #${repositorioFaenza[1]}/g' /etc/apt/sources.list.d/tiheum-equinox*.list"
-   #repositorioFaenza=("" "Repositorio de tema de iconos Faenza")
-   #repositorioFaenza[0]="apt-key add ./conf/faenza.key ; "
-   #repositorioFaenza[0]+="echo \"deb http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #${repositorioFaenza[1]}\" > /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
-   #repositorioFaenza[0]+="echo \"deb-src http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #${repositorioFaenza[1]}\" >> /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
+	grubcustomizerRepository=("add-apt-repository -y ppa:danielrichter2007/grub-customizer 2>&1" "$grubcustomizerRepositoryDescription" 0)
+	grubcustomizerRepository[0]+=";sed -i \"s/ main/ main #$grubcustomizerRepositoryDescription/g\" /etc/apt/sources.list.d/danielrichter2007-grub-customizer*.list"
 
-   repositorioGrubCustomizer=("add-apt-repository -y ppa:danielrichter2007/grub-customizer 2>&1" "Repositorio del gestor de Grub2: Grub-Customizer" 0)
-   repositorioGrubCustomizer[0]+=";sed -i 's/ main/ main #${repositorioGrubCustomizer[1]}/g' /etc/apt/sources.list.d/danielrichter2007-grub-customizer*.list"
+	jDownloaderRepository=("add-apt-repository -y ppa:jd-team/jdownloader 2>&1" "$jDownloaderRepositoryDescription" 0)
+	jDownloaderRepository[0]+=";sed -i \"s/ main/ main #$jDownloaderRepositoryDescription/g\" /etc/apt/sources.list.d/jd-team-jdownloader*.list"
 
-   repositoriojDownloader=("add-apt-repository -y ppa:jd-team/jdownloader 2>&1" "Repositorio de la utilidad jDownloader" 0)
-   repositoriojDownloader[0]+=";sed -i 's/ main/ main #${repositoriojDownloader[1]}/g' /etc/apt/sources.list.d/jd-team-jdownloader*.list"
-
-   repositorioJupiter=("add-apt-repository -y ppa:webupd8team/jupiter 2>&1" "Repositorio de la utilidad Jupiter" 0)
-   repositorioJupiter[0]+=";sed -i 's/ main/ main #${repositorioJupiter[1]}/g' /etc/apt/sources.list.d/webupd8team-jupiter*.list"
-
-   repositorioNemo=("add-apt-repository -y ppa:gwendal-lebihan-dev/cinnamon-stable 2>&1" "Repositorio de Cinnamon (para utilidad Nemo)" 0)
-   repositorioNemo[0]+=";sed -i 's/ main/ main #${repositorioNemo[1]}/g' /etc/apt/sources.list.d/gwendal-lebihan-dev-cinnamon-stable*.list"
+	nemoRepository=("add-apt-repository -y ppa:gwendal-lebihan-dev/cinnamon-stable 2>&1" "$nemoRepositoryDescription" 0)
+	nemoRepository[0]+=";sed -i \"s/ main/ main #$nemoRepositoryDescription/g\" /etc/apt/sources.list.d/gwendal-lebihan-dev-cinnamon-stable*.list"
       
-   repositorioOpera=("" "Repositorio del navegador Opera" 0)
-   repositorioOpera[0]="wget -O - http://deb.opera.com/archive.key 2>&1 | apt-key add - ; "
-   repositorioOpera[0]+="echo \"deb http://deb.opera.com/opera/ stable non-free #${repositorioOpera[1]}\" >> /etc/apt/sources.list.d/opera.list"
+	operaRepository=("" "$operaRepositoryDescription" 0)
+	operaRepository[0]="wget -O - http://deb.opera.com/archive.key 2>&1 | apt-key add - ; "
+	operaRepository[0]+="echo \"deb http://deb.opera.com/opera/ stable non-free #$operaRepositoryDescription\" >> /etc/apt/sources.list.d/opera.list"
 
-   repositoriosTerceros="${repositorioFaenza[0]} 2>>log.txt;" # Se van a ir agregando repositorios de Terceros segun las selecciones de programas en el menu de instalacion.
-   descripcionRepoTerceros="REPOSITORIOS DE TERCEROS:\n
+	# Third-party repository list formed by selected programs by user during installation process
+	thirdPartyRepositories="${faenzaRepository[0]} 2>>$logFile;"
+	# Third-party repository description list formed by selected programs by user during installation process
+	thirdPartyRepositoriesSummary="$thirdPartyRepositoriesDescription:\n
 ---------------------------------------------------------------\n
-   ${repositorioFaenza[1]}\n" # Se van a ir añadiendo las descripciones de los repositorios de terceros según instalación.
+   ${faenzaRepository[1]}\n"
    
-   # Se comprueba si existe el fichero de configuración asociado a la versión
-   if [ -e ./sh/versions/$versionUbuntu.xfce.repo.sh ]
-   then
-	  # Se eliminan los comentarios (líneas que comienzan por #) y los saltos de línea.
-      repositoriosTerceros+=`sed -e '/^#[^!]/d' ./sh/versions/$versionUbuntu.xfce.repo.sh | tr -d '\r\n'`
-      # Se eliminan los comentarios (líneas que comienzan por #)
-      descripcionRepoTerceros+=`sed -e '/^#[^!]/d' ./sh/versions/$versionUbuntu.xfce.description`
-      descripcionRepoTerceros+="  "
-   fi
+	if [ "$ubuntuVersion" == "12.04" ]; then
+		repositoryPackages+=" shimmer-themes-greybird"
+		thirdPartyRepositories+="add-apt-repository -y ppa:xubuntu-dev/xfce-4.10 2>&1;"
+		thirdPartyRepositories+="sed -i \"s/ main/ main #$xfceRepositoryDescription/g\" /etc/apt/sources.list.d/xubuntu-dev-xfce-4_10-precise.list 2>>$logFile;"
+		thirdPartyRepositories+="add-apt-repository -y ppa:geany-dev/ppa 2>&1;"
+		thirdPartyRepositories+="sed -i \"s/ main/ main #$geanyRepositoryDescription/g\" /etc/apt/sources.list.d/geany-dev-ppa-precise.list 2>>$logFile;"
+		thirdPartyRepositories+="add-apt-repository -y ppa:shimmerproject/ppa 2>&1;"
+		thirdPartyRepositories+="sed -i \"s/ main/ main #$greybirdRepositoryDescription/g\" /etc/apt/sources.list.d/shimmerproject-ppa-precise.list 2>>$logFile;"
+		thirdPartyRepositoriesSummary+="   $xfceRepositoryDescription\n   $geanyRepositoryDescription\n   $greybirdRepositoryDescription\n"
+	fi
 }
 
 ########################################################################################################################
-# COMPROBAR USUARIO ADMINISTRADOR
+# SELECT SCRIPT LANGUAGE
 ########################################################################################################################
-# Se comprueba si el script se está ejecutando como usuario administrador (root tiene id = 0)
+if [[ "$LANG" == "es"* ]]; then		# System language is spanish or latin so apply spanish language to this script.
+	. ./languages/es.properties
+else								# System language is not spanish nor latin so apply english language to this script.
+	. ./languages/en.properties
+fi
+
+########################################################################################################################
+# CHECK ROOT USER
+########################################################################################################################
+# Check if the script is being running like root user (root user has id equal to 0)
 if [ $(id -u) != 0 ]
 then
-   echo ""
-   echo "Este script debe ser ejecutado como usuario administrador."
-   echo "Para ejecutar el script: sudo bash ./install.sh"
-   echo "Si el script tiene permiso de ejecucion basta con: sudo ./install.sh"
-   echo "Para dar permiso de ejecucion: chmod +x install.sh"
-   echo ""
-   exit 1
+	echo ""
+	echo "$terminalMessage1"
+	echo "$terminalMessage2 sudo bash ./install.sh"
+	echo "$terminalMessage3 sudo ./install.sh"
+	echo "$terminalMessage4 chmod +x install.sh"
+	echo ""
+	exit 1
 fi
 
 ########################################################################################################################
-# PREPARAR INSTALADOR
+# PREPARING INSTALLER
 ########################################################################################################################
-inicializaVariables
-# Si hubo una instalación anterior errónea, se repara antes de continuar
-echo "   Reparando posibles errores ..."
-dpkg --configure -a >/dev/null 2>>log.txt
-echo "   Instalando paquetes necesarios ..."
-# Se instala "dialog": paquete necesario para mostrar las ventajas de diálogos del instalador
-# Se instala "python-software-properties": paquete necesario para que funcione correctamente gdebi, además de contener add-apt-repository en Ubuntu 12.04
-# Se instala "software-properties-common": paquete necesario para usar add-apt-repository a partir de Ubuntu 12.10
-apt-get -y install dialog python-software-properties software-properties-common --fix-missing >/dev/null 2>>log.txt
+initVariables
+mkdir $tempDir
+# Repair previous wrong installation process, if this was the case
+echo "   $terminalMessage5 ..."
+dpkg --configure -a >/dev/null 2>>$logFile
+echo "   $terminalMessage6 ..."
+# Install "dialog" package: Needed for showing installer dialog windows.
+# Install "python-software-properties" package: Needed to run gdebi application and "add-apt-repository" command in Ubuntu 12.04
+# Install "software-properties-common" package: Needed to run "add-apt-repository" command for Ubuntu 12.10 and above.
+apt-get -y install dialog python-software-properties software-properties-common --fix-missing >/dev/null 2>>$logFile
 
 ########################################################################################################################
-# INICIO DEL INSTALADOR
+# SCRIPT CREDITS
 ########################################################################################################################
-dialog --title "Sobre este instalador:" --backtitle "$descripcion" --msgbox \
-"\nAUTOR:          $autor\n
-DESCRIPCION:    $descripcion\n
-VERSION:        $version\n
-MODIFICADO:     $ultimaFechaModificacion\n
-PROBADO EN:     $distribucionProbada\n
-PRERREQUISITOS: Instalar sistema base de linux. Conexion a internet" 12 $anchoDialogo
+whiteSpaces="                  "
+printf "\n%.21s%s\n" "$authorLabel:$whiteSpaces" "$author" > $tempDir/credits.tmp
+printf "%.21s%s\n" "$descriptionLabel:$whiteSpaces" "$description" >> $tempDir/credits.tmp
+printf "%.21s%s\n" "$versionLabel:$whiteSpaces" "$version" >> $tempDir/credits.tmp
+printf "%.21s%s\n" "$modifiedLabel:$whiteSpaces" "$lastDateModified" >> $tempDir/credits.tmp
+printf "%.21s%s\n" "$testedLabel:$whiteSpaces" "$testedDistros" >> $tempDir/credits.tmp
+printf "%.21s%s\n" "$prerequisitesLabel:$whiteSpaces" "$prerequisitesMessage" >> $tempDir/credits.tmp
+printf "%.21s%s\n" "$englishTranslationLabel:$whiteSpaces" "$englishTranslationAuthors" >> $tempDir/credits.tmp
+
+dialog --title "$titleMessage0:" --backtitle "$description" --textbox $tempDir/credits.tmp 13 $dialogWidth
 
 ########################################################################################################################
-# PASO 1: USUARIO LINUX
+# STEP 1: LINUX USER
 ########################################################################################################################
-titulo="Paso 1/$totalPasos: Usuario linux (no root)"
-echo "$titulo">>log.txt
-until [ $accion -eq 0 ] && [ -n "$usuario" ] # Se muestra el cuadro de diálogo hasta que se introduzca un nombre de usuario no vacío y se pulse "Aceptar".
+title="$step 1/$totalSteps: $titleMessage1"
+echo "$title">>$logFile
+# Loop until the username is not empty and press the "Accept" button.
+until [ $action -eq 0 ] && [ -n "$user" ]
 do
-  dialog --title "$titulo" --backtitle "$descripcion" --inputbox "Introduce nombre de usuario de inicio de sesion:" 9 $anchoDialogo 2>/tmp/inputbox.tmp
-  accion=$?
-  usuario=`cat /tmp/inputbox.tmp`
+	dialog --title "$title" --backtitle "$description" --inputbox "$dialogMessage1" 9 $dialogWidth 2>$tempDir/username.tmp
+	action=$?
+	user=`cat $tempDir/username.tmp`
 done
-rm -f /tmp/inputbox.tmp 1>/dev/null 2>>log.txt
-
 
 ########################################################################################################################
-# PASO 2: CONFIGURACION DEL EQUIPO
+# STEP 2: COMPUTER FEATURES
 ########################################################################################################################
-titulo="Paso 2/$totalPasos: Configuracion del equipo"
-echo "$titulo">>log.txt
-caracteristicas=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCaracteristicas del ordenador:" 16 $anchoDialogo 7 \
-1 "El ordenador es un portatil" off \
-2 "El ordenador esta conectado a una red local" off \
-3 "El ordenador esta en un dominio" off \
-4 "El ordenador tiene grabadora de CD-rom/DVD-rom" off \
-5 "El ordenador tiene instalada una camara web" off \
-6 "El ordenador tiene instalada una impresora" off \
-7 "El ordenador tiene instalado un escaner" off`
+title="$step 2/$totalSteps: $titleMessage2"
+echo "$title">>$logFile
+features=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$dialogMessage2:" 16 $dialogWidth 7 \
+1 "$menuMessage21" off \
+2 "$menuMessage22" off \
+3 "$menuMessage23" off \
+4 "$menuMessage24" off \
+5 "$menuMessage25" off \
+6 "$menuMessage26" off \
+7 "$menuMessage27" off`
 if [ $? -eq 0 ]
 then
-   for c in $caracteristicas
-   do
-      case $c in
-         1) paquetesRepositorio+=" ${pluginBateria[0]}"
-            programasOpcionales+=" ${pluginBateria[1]}";;
-		 2) paquetesRepositorio+=" ${redLocal[0]}"
-            programasOpcionales+=" ${redLocal[1]}";;
-		 3) paquetesRepositorio+=" ${integraConDominio[0]}"
-			programasOpcionales+=" ${integraConDominio[1]}";;
-         4) paquetesRepositorio+=" ${grabacion[0]}"
-            programasOpcionales+=" ${grabacion[1]}";;
-         5) paquetesRepositorio+=" ${webcam[0]}"
-            programasOpcionales+=" ${webcam[1]}";;
-         6) paquetesRepositorio+=" ${impresora[0]}"
-            programasOpcionales+=" ${impresora[1]}";;
-         7) paquetesRepositorio+=" ${escaner[0]}"
-            programasOpcionales+=" ${escaner[1]}";;
-      esac
-   done
+	for f in $features
+	do
+		case $f in
+		1) repositoryPackages+=" ${batteryPlugin[0]}"
+			optionalPrograms+=" ${batteryPlugin[1]}";;
+		2) repositoryPackages+=" ${localNetwork[0]}"
+			optionalPrograms+=" ${localNetwork[1]}";;
+		3) repositoryPackages+=" ${likewiseOpen[0]}"
+			optionalPrograms+=" ${likewiseOpen[1]}";;
+		4) repositoryPackages+=" ${burning[0]}"
+			optionalPrograms+=" ${burning[1]}";;
+		5) repositoryPackages+=" ${webcam[0]}"
+			optionalPrograms+=" ${webcam[1]}";;
+		6) repositoryPackages+=" ${printer[0]}"
+			optionalPrograms+=" ${printer[1]}";;
+		7) repositoryPackages+=" ${scanner[0]}"
+			optionalPrograms+=" ${scanner[1]}";;
+		esac
+	done
 fi
 
 ########################################################################################################################
-# PASO 3: SELECCION DE PROGRAMAS A INSTALAR
+# STEP 3: SELECTION OF PROGRAMS TO INSTALL
 ########################################################################################################################
-titulo="Paso 3/$totalPasos: Programas a instalar"
-echo "$titulo">>log.txt
+title="$step 3/$totalSteps: $titleMessage3"
+echo "$title">>$logFile
 
-accion=1
-seleccionados=()
-until [ $accion -eq 0 ] && [ ${#seleccionados[*]} -gt 0 ] # Se muestra el cuadro de diálogo hasta que se pulse "Aceptar".
+action=1
+selected=()
+# Loop until the "Accept" button is pressed.
+until [ $action -eq 0 ] && [ ${#selected[*]} -gt 0 ]
 do
-   lightdm=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --menu "\nCategoria 1/10: Pantalla de autenticacion de usuarios y entrada a Xfce:" 11 $anchoDialogo 3 \
-   1 "Instala Lightdm. El usuario inicia sesion automaticamente." \
-   2 "Instala Lightdm. El usuario debe autenticarse por entorno grafico." \
-   3 "No instalar Lightdm. El usuario debe autenticarse en consola."`
-   accion=$?
-   seleccionados=($lightdm)
+	lightdm=`dialog --title "$title" --backtitle "$description" --stdout --menu "\n$category 1/10: $dialogMessage3:" 12 $dialogWidth 3 \
+	1 "$menuMessage31" \
+	2 "$menuMessage32" \
+	3 "$menuMessage33"`
+	action=$?
+	selected=($lightdm)
 done
 for l in $lightdm
 do
-   case $l in
-      1) paquetesRepositorio+=" ${lightdmGtkGreeter[0]}"
-		 instalaLightdm=1
-         inicioAutomatico=1
-         gestorEscritorios+="   El usuario inicia sesion automaticamente." ;;
-      2) paquetesRepositorio+=" ${lightdmGtkGreeter[0]}"
-	     instalaLightdm=1
-         inicioAutomatico=0
-         gestorEscritorios+="   El usuario debe autenticarse." ;;
-      3) instalaLightdm=0 ;;
-   esac
+	case $l in
+	1) repositoryPackages+=" ${lightdmGtkGreeter[0]}"
+		lightdmInstalled=1
+		automaticLogin=1
+		desktopManagerSummary+="   $infoMessage1" ;;
+	2) repositoryPackages+=" ${lightdmGtkGreeter[0]}"
+		lightdmInstalled=1
+		automaticLogin=0
+		desktopManagerSummary+="   $infoMessage2" ;;
+	3) lightdmInstalled=0 ;;
+	esac
 done
 
 
-compresores=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 2/10: Compresores:" 12 $anchoDialogo 3 \
-1 "Compresor 7zip" on \
-2 "Compresor/descompresor Rar" on \
-3 "Ventana grafica para comprimir/descomprimir (File-Roller)" on`
+compressors=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 2/10: $compressors:" 12 $dialogWidth 3 \
+1 "$zipCompressorDescription" on \
+2 "$rarCompressorDescription" on \
+3 "$filerollerDescription" on`
 
 if [ $? -eq 0 ]
 then
-   for c in $compresores
-   do
-      case $c in
-		1) paquetesRepositorio+=" ${compresor7zip[0]}"
-		   programasOpcionales+=" ${compresor7zip[1]}" ;;
-		2) paquetesRepositorio+=" ${compresorRar[0]}"
-		   programasOpcionales+=" ${compresorRar[1]}" ;;
-		3) paquetesRepositorio+=" ${fileroller[0]}"
-		   programasOpcionales+=" ${fileroller[1]}" ;;
-      esac
-   done
+	for c in $compressors
+	do
+		case $c in
+		1) repositoryPackages+=" ${zipCompressor[0]}"
+			optionalPrograms+=" ${zipCompressor[1]}" ;;
+		2) repositoryPackages+=" ${rarCompressor[0]}"
+			optionalPrograms+=" ${rarCompressor[1]}" ;;
+		3) repositoryPackages+=" ${fileroller[0]}"
+			optionalPrograms+=" ${fileroller[1]}" ;;
+		esac
+	done
 fi
     
-desarrollo=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 3/10: Desarrollo:" 12 $anchoDialogo 3 \
-1 "Editor de texto avanzado y entorno de programacion (Geany)" off \
-2 "Entorno de desarrollo Web y programacion (Bluefish)" off \
-3 "Java Develoment Kit (OpenJDK)" on`
+development=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 3/10: $development:" 12 $dialogWidth 3 \
+1 "$geanyDescription" off \
+2 "$bluefishDescription" off \
+3 "$jdkDescription" on`
 
 if [ $? -eq 0 ]
 then
-   for d in $desarrollo
-   do
-      case $d in
-		1) paquetesRepositorio+=" ${geany[0]}"
-		   programasOpcionales+=" ${geany[1]}" ;;
-		2) paquetesRepositorio+=" ${bluefish[0]}"
-		   programasOpcionales+=" ${bluefish[1]}" ;;
-		3) paquetesRepositorio+=" ${jdk[0]}"
-		   programasOpcionales+=" ${jdk[1]}" ;;
-      esac
-   done
+	for d in $development
+	do
+		case $d in
+		1) repositoryPackages+=" ${geany[0]}"
+			optionalPrograms+=" ${geany[1]}" ;;
+		2) repositoryPackages+=" ${bluefish[0]}"
+			optionalPrograms+=" ${bluefish[1]}" ;;
+		3) repositoryPackages+=" ${jdk[0]}"
+			optionalPrograms+=" ${jdk[1]}" ;;
+		esac
+	done
 fi
 
-descargas=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 4/10: Descargas:" 18 $anchoDialogo 9 \
-1 "Descargas P2P para enlaces eDonkey (aMule)" off \
-2 "Descargas P2P para enlaces eDonkey para conexiones remotas (aMule daemon)" off \
-3 "Descargas P2P para ficheros .torrent (Deluge)" off \
-4 "Descargas P2P para ficheros .torrent. Demonio. (Deluged)" off \
-5 "Descargas P2P para ficheros .torrent (Qbitorrent)" off \
-6 "Descargas P2P para ficheros .torrent. Demonio. (Qbitorrent Nox)" off \
-7 "Descargas P2P para ficheros .torrent. Demonio. (uTorrent Server)" off \
-8 "Descargas directas de servidores. Demonio. Ligero (pyLoad)" off \
-9 "Descargas directas de servidores. Popular (jDownloader)" off`
+downloads=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 4/10: $downloads:" 18 $dialogWidth 9 \
+1 "$aMuleDescription" off \
+2 "$aMuleDaemonDescription" off \
+3 "$delugeDescription" off \
+4 "$delugedDescription" off \
+5 "$qbittorrentDescription" off \
+6 "$qbittorrentDaemonDescription" off \
+7 "$utorrentDescription" off \
+8 "$debPyloadDescription" off \
+9 "$jdownloaderDescription" off`
 
 if [ $? -eq 0 ]
 then
-   for d in $descargas
-   do
-      case $d in
-		1) paquetesRepositorio+=" ${aMule[0]}"
-           programasOpcionales+=" ${aMule[1]}"
-           # Se quita el aMule normal de la siguiente opcion, ya que se instala en la iteracion actual.
-           repoaMuleDaemon[0]="amule-daemon amule-utils-gui" ;;
-        2) paquetesRepositorio+=" ${aMuleDaemon[0]}"
-           programasOpcionales+=" ${aMuleDaemon[1]}"
-           configuraAmuleDaemon=1;;
-        3) paquetesRepositorio+=" ${deluge[0]}"
-           programasOpcionales+=" ${deluge[1]}";;
-        4) paquetesRepositorio+=" ${deluged[0]}"
-           programasOpcionales+=" ${deluged[1]}"
-           scripts+=" ${scriptDeluged[0]}"
-           instalaDeluged=1 ;;
-		5) paquetesRepositorio+=" ${qbittorrent[0]}"
-           programasOpcionales+=" ${qbittorrent[1]}";;
-        6) paquetesRepositorio+=" ${qbittorrentDaemon[0]}"
-           programasOpcionales+=" ${qbittorrentDaemon[1]}"
-           scripts+=" ${scriptQbittorrentDaemon[0]}"
-           instalaQbittorrentDaemon=1 ;;
-        7) scripts+=" ${scriptUtorrent[0]}"
-           programasOpcionales+=" ${scriptUtorrent[1]}"
-		   instalaUtorrent=1;;
-		8) urlsDeb+=" ${debPyload[0]}"
-		   scripts+=" ${scriptPyload[0]}"
-           paquetesDeb+=" ${debPyload[1]}"
-           programasOpcionales+=" ${debPyload[2]}"
-           instalaPyload=1;;
-        9) programasOpcionales+=" ${jdownloader[1]}"
-		   repositoriojDownloader[2]=1
-           repositoriosTerceros+="${repositoriojDownloader[0]} 2>>log.txt; "
-		   descripcionRepoTerceros+="   ${repositoriojDownloader[1]}\n";;
-      esac
-   done
+	for d in $downloads
+	do
+		case $d in
+		1) repositoryPackages+=" ${aMule[0]}"
+			optionalPrograms+=" ${aMule[1]}"
+			repoaMuleDaemon[0]="amule-daemon amule-utils-gui" ;;
+		2) repositoryPackages+=" ${aMuleDaemon[0]}"
+			optionalPrograms+=" ${aMuleDaemon[1]}"
+			amuleDaemonInstalled=1;;
+		3) repositoryPackages+=" ${deluge[0]}"
+			optionalPrograms+=" ${deluge[1]}";;
+		4) repositoryPackages+=" ${deluged[0]}"
+			optionalPrograms+=" ${deluged[1]}"
+			delugedInstalled=1 ;;
+		5) repositoryPackages+=" ${qbittorrent[0]}"
+			optionalPrograms+=" ${qbittorrent[1]}";;
+		6) repositoryPackages+=" ${qbittorrentDaemon[0]}"
+			optionalPrograms+=" ${qbittorrentDaemon[1]}"
+			qbittorrentDaemonInstalled=1 ;;
+		7) 	optionalPrograms+=" ${scriptUtorrent[1]}"
+			utorrentInstalled=1;;
+		8) debUrls+=" ${debPyload[0]}"
+			debPackages+=" ${debPyload[1]}"
+			optionalPrograms+=" ${debPyload[2]}"
+			pyloadInstalled=1;;
+		9) optionalPrograms+=" ${jdownloader[1]}"
+			jDownloaderRepository[2]=1
+			thirdPartyRepositories+="${jDownloaderRepository[0]} 2>>$logFile; "
+			thirdPartyRepositoriesSummary+="   ${jDownloaderRepository[1]}\n";;
+		esac
+	done
 fi
 
-escritorio=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 5/10: Utilidades del escritorio:" 15 $anchoDialogo 6 \
-1 "Capturador de pantalla de Xfce (Xfce4-Screenshooter)" on \
-2 "Editor del menu de aplicaciones (Alacarte)" on \
-3 "Efectos de escritorio con Opengl 3D (Compiz)" off \
-4 "Indicadores en el panel de sistema para red, mensajería, sonido y otros" on \
-5 "Utilidad de limpieza de ficheros temporales (Bleachbit)" on \
-6 "Utilidad grafica para realizar busqueda de ficheros (Catfish)" on`
+desktop=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 5/10: $desktopTools:" 15 $dialogWidth 6 \
+1 "$screenshooterDescription" on \
+2 "$alacarteDescription" on \
+3 "$compizDescription" off \
+4 "$indicatorsDescription" on \
+5 "$bleachbitDescription" on \
+6 "$catfishDescription" on`
 
 if [ $? -eq 0 ]
 then
-   for e in $escritorio
-   do
-      case $e in
-		1) paquetesRepositorio+=" ${screenshooter[0]}"
-           programasOpcionales+=" ${screenshooter[1]}";;
-		2) paquetesRepositorio+=" ${alacarte[0]}"
-           programasOpcionales+=" ${alacarte[1]}";;
-		3) paquetesRepositorio+=" ${compiz[0]}"
-		   programasOpcionales+=" ${compiz[1]}"
-		   instalaCompiz=1 ;;
-		4) paquetesRepositorio+=" ${indicators[0]}"
-		   programasOpcionales+=" ${indicators[1]}" ;;
-		5) paquetesRepositorio+=" ${bleachbit[0]}"
-		   programasOpcionales+=" ${bleachbit[1]}" ;;
-		6) paquetesRepositorio+=" ${catfish[0]}"
-		   programasOpcionales+=" ${catfish[1]}" ;;
-      esac
-   done
+	for d in $desktop
+	do
+		case $d in
+		1) repositoryPackages+=" ${screenshooter[0]}"
+			optionalPrograms+=" ${screenshooter[1]}";;
+		2) repositoryPackages+=" ${alacarte[0]}"
+			optionalPrograms+=" ${alacarte[1]}";;
+		3) repositoryPackages+=" ${compiz[0]}"
+			optionalPrograms+=" ${compiz[1]}"
+			compizInstalled=1 ;;
+		4) repositoryPackages+=" ${indicators[0]}"
+			optionalPrograms+=" ${indicators[1]}" ;;
+		5) repositoryPackages+=" ${bleachbit[0]}"
+			optionalPrograms+=" ${bleachbit[1]}" ;;
+		6) repositoryPackages+=" ${catfish[0]}"
+			optionalPrograms+=" ${catfish[1]}" ;;
+		esac
+	done
 fi
 
-juegos=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 6/10: Juegos:" 10 $anchoDialogo 1 \
-1 "Plataforma online de juegos (Steam)" off`
+games=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 6/10: $games:" 10 $dialogWidth 1 \
+1 "$debSteamDescription" off`
 
 if [ $? -eq 0 ]
 then
-   for j in $juegos
-   do
-      case $j in
-		1) urlsDeb+=" ${debSteam[0]}"
-		   paquetesDeb+=" ${debSteam[1]}"
-		   programasOpcionales+=" ${debSteam[2]}" ;;
-      esac
-   done
-fi	  
+	for g in $games
+	do
+		case $g in
+		1) debUrls+=" ${debSteam[0]}"
+			debPackages+=" ${debSteam[1]}"
+			optionalPrograms+=" ${debSteam[2]}" ;;
+		esac
+	done
+fi  
 
-multimedia=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 7/10: Multimedia:" 21 $anchoDialogo 12 \
-1 "Canales de television online (TV en linux)" off \
-2 "Catalogador de peliculas, musica, libros, etc (Gcstar)" off \
-3 "Centro multimedia de videos, fotos y musica (Xbmc)" off \
-4 "Editor de imagenes (Gimp)" off \
-5 "Pack de codecs de audio y video (Gstreamer)" on \
-6 "Plugin para reproducir videos Flash en navegadores web" on \
-7 "Reproductor de audio Audacious (similar a winamp, ligero)" off \
-8 "Reproductor de audio Clementine (biblioteca de audio)" off \
-9 "Reproductor de video con codecs propios e interfaz (Videolan)" on \
-10 "Reproductor de video con interfaz grafica (Gnome Mplayer)" off \
-11 "Reproductor de video desde consola (Mplayer)" on \
-12 "Visor de fotos ligero (Gpicview)" on`
+multimedia=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 7/10: $multimedia:" 21 $dialogWidth 12 \
+1 "$linuxTVDescription" off \
+2 "$gcstarDescription" off \
+3 "$xbmcDescription" off \
+4 "$gimpDescription" off \
+5 "$videoAudioCodecsDescription" on \
+6 "$flashpluginDescription" on \
+7 "$audaciousDescription" off \
+8 "$clementineDescription" off \
+9 "$videolanDescription" on \
+10 "$gmplayerDescription" off \
+11 "$mplayerDescription" on \
+12 "$gpicviewDescription" on`
 
 if [ $? -eq 0 ]
 then
-   for m in $multimedia
-   do
-      case $m in
-        1) paquetesRepositorio+=" ${tvEnLinux[0]}"
-		   programasOpcionales+=" ${tvEnLinux[1]}"
-		   scripts+=" ${scriptTvEnLinux[0]}";;
-        2) paquetesRepositorio+=" ${gcstar[0]}"
-		   programasOpcionales+=" ${gcstar[1]}";;
-	    3) paquetesRepositorio+=" ${xbmc[0]}"
-		   programasOpcionales+=" ${xbmc[1]}";;
-		4) paquetesRepositorio+=" ${gimp[0]}"
-		   programasOpcionales+=" ${gimp[1]}";;
-		5) paquetesRepositorio+=" ${codecsVideoAudio[0]}"
-		   programasOpcionales+=" ${codecsVideoAudio[1]}";;
-		6) paquetesRepositorio+=" ${flashplugin[0]}"
-		   programasOpcionales+=" ${flashplugin[1]}";;
-		7) paquetesRepositorio+=" ${audacious[0]}"
-		   programasOpcionales+=" ${audacious[1]}" ;;
-		8) paquetesRepositorio+=" ${clementine[0]}"
-		   programasOpcionales+=" ${clementine[1]}" ;;
-		9) paquetesRepositorio+=" ${videolan[0]}"
-		   programasOpcionales+=" ${videolan[1]}" ;;
-		10) paquetesRepositorio+=" ${gmplayer[0]}"
-		   programasOpcionales+=" ${gmplayer[1]}" ;;
-        11) paquetesRepositorio+=" ${mplayer[0]}"
-		   programasOpcionales+=" ${mplayer[1]}" ;;
-		12) paquetesRepositorio+=" ${gpicview[0]}"
-		   programasOpcionales+=" ${gpicview[1]}" ;;
-      esac
-   done
+	for m in $multimedia
+	do
+		case $m in
+		1) repositoryPackages+=" ${linuxTV[0]}"
+			optionalPrograms+=" ${linuxTV[1]}"
+			linuxTVInstalled=1 ;;
+		2) repositoryPackages+=" ${gcstar[0]}"
+			optionalPrograms+=" ${gcstar[1]}";;
+		3) repositoryPackages+=" ${xbmc[0]}"
+			optionalPrograms+=" ${xbmc[1]}";;
+		4) repositoryPackages+=" ${gimp[0]}"
+			optionalPrograms+=" ${gimp[1]}";;
+		5) repositoryPackages+=" ${videoAudioCodecs[0]}"
+			optionalPrograms+=" ${videoAudioCodecs[1]}";;
+		6) repositoryPackages+=" ${flashplugin[0]}"
+			optionalPrograms+=" ${flashplugin[1]}";;
+		7) repositoryPackages+=" ${audacious[0]}"
+			optionalPrograms+=" ${audacious[1]}" ;;
+		8) repositoryPackages+=" ${clementine[0]}"
+			optionalPrograms+=" ${clementine[1]}" ;;
+		9) repositoryPackages+=" ${videolan[0]}"
+			optionalPrograms+=" ${videolan[1]}" ;;
+		10) repositoryPackages+=" ${gmplayer[0]}"
+			optionalPrograms+=" ${gmplayer[1]}" ;;
+		11) repositoryPackages+=" ${mplayer[0]}"
+			optionalPrograms+=" ${mplayer[1]}" ;;
+		12) repositoryPackages+=" ${gpicview[0]}"
+			optionalPrograms+=" ${gpicview[1]}" ;;
+		esac
+	done
 fi
 
-oficina=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 8/10: Oficina:" 22 $anchoDialogo 13 \
-1 "Calcudora de Xfce (Galculator)" on \
-2 "Curso de mecanografia (Klavaro)" off \
-3 "Editor de textos estandar (Gedit)" on \
-4 "Editor de textos sencillo (Mousepad)" off \
-5 "Editor ligero de documentos de word (Abiword)" off \
-6 "Editor ligero de hojas de calculo (Gnumeric)" off \
-7 "Impresora de documentos PDF (cups-pdf)" off \
-8 "Notas post-it de Xfce (Xfce4-notes)" on \
-9 "Sincronizador de ficheros y copias de seguridad (LuckyBackup)" off \
-10 "Suite ofimatica de documentos, hojas de calculo, etc (LibreOffice)" on \
-11 "Visor, conversor y catalogador de ebooks (Calibre)" off \
-12 "Visor de comics (Mcomix)" off \
-13 "Visor de ficheros Pdf (Evince)" on`
+office=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 8/10: $office:" 22 $dialogWidth 13 \
+1 "$galculatorDescription" on \
+2 "$klavaroDescription" off \
+3 "$geditDescription" on \
+4 "$mousepadDescription" off \
+5 "$abiwordDescription" off \
+6 "$gnumericDescription" off \
+7 "$printerPdfDescription" off \
+8 "$notesDescription" on \
+9 "$luckybackupDescription" off \
+10 "$libreofficeDescription" on \
+11 "$calibreDescription" off \
+12 "$mcomixDescription" off \
+13 "$evinceDescription" on`
 
 if [ $? -eq 0 ]
 then
-   for o in $oficina
-   do
-      case $o in
-        1) paquetesRepositorio+=" ${galculator[0]}"
-		   programasOpcionales+=" ${galculator[1]}" ;;
-		2) paquetesRepositorio+=" ${klavaro[0]}"
-		   programasOpcionales+=" ${klavaro[1]}";;
-        3) paquetesRepositorio+=" ${gedit[0]}"
-		   programasOpcionales+=" ${gedit[1]}";;
-		4) paquetesRepositorio+=" ${mousepad[0]}"
-		   programasOpcionales+=" ${mousepad[1]}";;
-		5) paquetesRepositorio+=" ${abiword[0]}"
-		   programasOpcionales+=" ${abiword[1]}";;
-		6) paquetesRepositorio+=" ${gnumeric[0]}"
-		   programasOpcionales+=" ${gnumeric[1]}";;
-		7) paquetesRepositorio+=" ${impresoraPdf[0]}"
-		   programasOpcionales+=" ${impresoraPdf[1]}";;		
-		8) paquetesRepositorio+=" ${notes[0]}"
-		   programasOpcionales+=" ${notes[1]}";;
-		9) paquetesRepositorio+=" ${luckybackup[0]}"
-		   programasOpcionales+=" ${luckybackup[1]}";;
-		10) paquetesRepositorio+=" ${libreoffice[0]}"
-		    programasOpcionales+=" ${libreoffice[1]}";;
-		11) paquetesRepositorio+=" ${calibre[0]}"
-		    programasOpcionales+=" ${calibre[1]}";;
-		12) if [ $versionUbuntu == "12.04" ]; then
-				repositorioMcomix=("add-apt-repository -y ppa:blca/ppa 2>&1" "Repositorio del visor de comics Mcomix")
-				repositorioMcomix[0]+=";sed -i 's/ main/ main #${repositorioMcomix[1]}/g' /etc/apt/sources.list.d/blca-ppa*.list"
-				repositoriosTerceros+="${repositorioMcomix[0]} 2>>log.txt; "
-				descripcionRepoTerceros+="   ${repositorioMcomix[1]}\n"
+	for o in $office
+	do
+		case $o in
+		1) repositoryPackages+=" ${galculator[0]}"
+			optionalPrograms+=" ${galculator[1]}" ;;
+		2) repositoryPackages+=" ${klavaro[0]}"
+			optionalPrograms+=" ${klavaro[1]}";;
+		3) repositoryPackages+=" ${gedit[0]}"
+			optionalPrograms+=" ${gedit[1]}";;
+		4) repositoryPackages+=" ${mousepad[0]}"
+			optionalPrograms+=" ${mousepad[1]}";;
+		5) repositoryPackages+=" ${abiword[0]}"
+			optionalPrograms+=" ${abiword[1]}";;
+		6) repositoryPackages+=" ${gnumeric[0]}"
+			optionalPrograms+=" ${gnumeric[1]}";;
+		7) repositoryPackages+=" ${printerPdf[0]}"
+			optionalPrograms+=" ${printerPdf[1]}";;		
+		8) repositoryPackages+=" ${notes[0]}"
+			optionalPrograms+=" ${notes[1]}";;
+		9) repositoryPackages+=" ${luckybackup[0]}"
+			optionalPrograms+=" ${luckybackup[1]}";;
+		10) repositoryPackages+=" ${libreoffice[0]}"
+			optionalPrograms+=" ${libreoffice[1]}";;
+		11) repositoryPackages+=" ${calibre[0]}"
+			optionalPrograms+=" ${calibre[1]}";;
+		12) if [ $ubuntuVersion == "12.04" ]; then
+				repositorioMcomix=("add-apt-repository -y ppa:blca/ppa 2>&1" $mcomixRepositoryDescription)
+				repositorioMcomix[0]+=";sed -i 's/ main/ main #$mcomixRepositoryDescription/g' /etc/apt/sources.list.d/blca-ppa*.list"
+				thirdPartyRepositories+="${repositorioMcomix[0]} 2>>$logFile; "
+				thirdPartyRepositoriesSummary+="   $mcomixRepositoryDescription\n"
 			fi
-			paquetesRepositorio+=" ${mcomix[0]}"
-		    programasOpcionales+=" ${mcomix[1]}";;
-		13) paquetesRepositorio+=" ${evince[0]}"
-		    programasOpcionales+=" ${evince[1]}";;
-      esac
-   done
+			repositoryPackages+=" ${mcomix[0]}"
+			optionalPrograms+=" ${mcomix[1]}";;
+		13) repositoryPackages+=" ${evince[0]}"
+			optionalPrograms+=" ${evince[1]}";;
+		esac
+	done
 fi
 
-sistema=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 9/10: Utilidades del sistema:" 30 $anchoDialogo 20 \
-1 "Cambia rendimiento del pc, modos idle-performance (Jupiter)" off \
-2 "Centro de software avanzado de Ubuntu" on \
-3 "Centro de software ligero de Lubuntu" off \
-4 "Emulador de software de Windows (Wine)" off \
-5 "Explorador de ficheros (Nemo)" off \
-6 "Gestor de actualizaciones del sistema" on \
-7 "Gestor de paquetes (Synaptic)" off \
-8 "Gestor de perfiles de red cableada y wifi (Network Manager)" on \
-9 "Grubcustomizer (administrador de arranque Grub2)" on \
-10 "Monitor del sistema de Gnome" off \
-11 "Monitor del sistema ligero (Lxtask)" on \
-12 "Selector de idiomas" on \
-13 "Salvapantallas de Xfce (Xscreensaver)" on \
-14 "Utilidad de deteccion del hardware del equipo (Hardinfo)" off \
-15 "Utilidad grafica para instalar paquetes deb (Gdebi)" on \
-16 "Utilidad para administrar particiones del disco duro (Gparted)" on \
-17 "Utilidad para instalar drivers (Jockey). Solo Ubuntu 12.04" on \
-18 "Ventana de administracion de energia" on \
-19 "Ventana de gestion de usuarios del sistema" on \
-20 "Virtualiza distintos Sistemas Operativos (VirtualBox)" off`
+system=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 9/10: $systemTools:" 30 $dialogWidth 20 \
+1 "$gnomeSoftwareCenterDescription" on \
+2 "$lxdeSoftwareCenterDescription" off \
+3 "$wineDescription" off \
+4 "$nemoDescription" off \
+5 "$updateManagerDescription" on \
+6 "$synapticDescription" off \
+7 "$networkManagerDescription" on \
+8 "$grubcustomizerDescription" on \
+9 "$systemMonitorDescription" off \
+10 "$logViewerDescription" off \
+11 "$lxtaskDescription" on \
+12 "$xscreensaverDescription" on \
+13 "$hardinfoDescription" off \
+14 "$gdebiDescription" on \
+15 "$gpartedDescription" on \
+16 "$jockeyDescription" on \
+17 "$powerManagerDescription" on \
+18 "$scheduleDescription" on \
+29 "$userSettingsDescription" on \
+20 "$virtualboxDescription" off`
 
 if [ $? -eq 0 ]
 then
-   for s in $sistema
-   do
-      case $s in
-		1) programasOpcionales+=" ${jupiter[1]}"
-		   repositorioJupiter[2]=1
-		   repositoriosTerceros+="${repositorioJupiter[0]} 2>>log.txt; "
-		   descripcionRepoTerceros+="   ${repositorioJupiter[1]}\n" ;;
-		2) paquetesRepositorio+=" ${centroSoftwareGnome[0]}"
-		   programasOpcionales+=" ${centroSoftwareGnome[1]}";;
-		3) paquetesRepositorio+=" ${centroSoftwareLxde[0]}"
-		   programasOpcionales+=" ${centroSoftwareLxde[1]}";;	 
-		4) paquetesRepositorio+=" ${wine[0]}"
-		   programasOpcionales+=" ${wine[1]}";;
-		5) paquetesRepositorio+=" ${terminalGnome[0]} ${thumbnailGnome[0]}"
-		   programasBase+=" ${terminalGnome[1]}"
-		   repositoriosTerceros+="${repositorioNemo[0]} 2>>log.txt; "
-		   descripcionRepoTerceros+="   ${repositorioNemo[1]}\n"
-		   programasOpcionales+=" ${nemo[1]} ${thumbnailGnome[1]}"
-		   instalaNemo=1
-		   repositorioNemo[2]=1 ;;
-		6) paquetesRepositorio+=" ${updatemanager[0]}"
-		   programasOpcionales+=" ${updateManager[1]}";;	 
-		7) paquetesRepositorio+=" ${synaptic[0]}"
-		   programasOpcionales+=" ${synaptic[1]}";;
-		8) paquetesRepositorio+=" ${networkManager[0]}"
-		   programasOpcionales+=" ${networkManager[1]}"
-		   instalaNetworkManager=1 ;;
-		9) repositoriosTerceros+="${repositorioGrubCustomizer[0]} 2>>log.txt; "
-	       descripcionRepoTerceros+="   ${repositorioGrubCustomizer[1]}\n"
-		   programasOpcionales+=" ${grubcustomizer[1]}" 
-		   repositorioGrubCustomizer[2]=1 ;;
-		10) paquetesRepositorio+=" ${systemMonitor[0]}"
-		   programasOpcionales+=" ${systemMonitor[1]}";;
-		11) paquetesRepositorio+=" ${lxtask[0]}"
-		    programasOpcionales+=" ${lxtask[1]}";;
-		12) paquetesRepositorio+=" ${selectorIdioma[0]}"
-		    programasOpcionales+=" ${selectorIdioma[1]}";;
-		13) paquetesRepositorio+=" ${xscreensaver[0]}"
-		    programasOpcionales+=" ${xscreensaver[1]}";;
-		14) paquetesRepositorio+=" ${hardinfo[0]}"
-		    programasOpcionales+=" ${hardinfo[1]}";;
-		15) paquetesRepositorio+=" ${gdebi[0]}"
-		    programasOpcionales+=" ${gdebi[1]}"
-			instalaGdebi=1;;
-		16) paquetesRepositorio+=" ${gparted[0]}"
-		    programasOpcionales+=" ${gparted[1]}";;
-		17) if [ $versionUbuntu == "12.04" ]; then
-				paquetesRepositorio+=" ${jockey[0]}"
-				programasOpcionales+=" ${jockey[1]}"
-		    fi ;;
-		18) paquetesRepositorio+=" ${powerManager[0]}"
-		    programasOpcionales+=" ${powerManager[1]}";;
-		19) paquetesRepositorio+=" ${userSettings[0]}"
-		    programasOpcionales+=" ${userSettings[1]}";;
-		20) paquetesRepositorio+=" ${virtualbox[0]}"
-		    programasOpcionales+=" ${virtualbox[1]}";;
-      esac
-   done
+	for s in $system
+	do
+		case $s in
+		1) repositoryPackages+=" ${gnomeSoftwareCenter[0]}"
+			optionalPrograms+=" ${gnomeSoftwareCenter[1]}";;
+		2) repositoryPackages+=" ${lxdeSoftwareCenter[0]}"
+			optionalPrograms+=" ${lxdeSoftwareCenter[1]}";;	 
+		3) repositoryPackages+=" ${wine[0]}"
+			optionalPrograms+=" ${wine[1]}";;
+		4) repositoryPackages+=" ${gnomeTerminal[0]} ${gnomeThumbnail[0]}"
+			basePrograms+=" ${gnomeTerminal[1]}"
+			thirdPartyRepositories+="${nemoRepository[0]} 2>>$logFile; "
+			thirdPartyRepositoriesSummary+="   ${nemoRepository[1]}\n"
+			optionalPrograms+=" ${nemo[1]} ${gnomeThumbnail[1]}"
+			nemoInstalled=1
+			nemoRepository[2]=1 ;;
+		5) repositoryPackages+=" ${updatemanager[0]}"
+			optionalPrograms+=" ${updateManager[1]}";;	 
+		6) repositoryPackages+=" ${synaptic[0]}"
+			optionalPrograms+=" ${synaptic[1]}";;
+		7) repositoryPackages+=" ${networkManager[0]}"
+			optionalPrograms+=" ${networkManager[1]}"
+			networkManagerInstalled=1 ;;
+		8) thirdPartyRepositories+="${grubcustomizerRepository[0]} 2>>$logFile; "
+			thirdPartyRepositoriesSummary+="   ${grubcustomizerRepository[1]}\n"
+			optionalPrograms+=" ${grubcustomizer[1]}" 
+			grubcustomizerRepository[2]=1 ;;
+		9) repositoryPackages+=" ${systemMonitor[0]}"
+			optionalPrograms+=" ${systemMonitor[1]}"
+			systemMonitorInstalled=1;;
+		10) repositoryPackages+=" ${logViewer[0]}"
+			optionalPrograms+=" ${logViewer[1]}";;
+		11) repositoryPackages+=" ${lxtask[0]}"
+			optionalPrograms+=" ${lxtask[1]}";;
+		12) repositoryPackages+=" ${xscreensaver[0]}"
+			optionalPrograms+=" ${xscreensaver[1]}";;
+		13) repositoryPackages+=" ${hardinfo[0]}"
+			optionalPrograms+=" ${hardinfo[1]}";;
+		14) repositoryPackages+=" ${gdebi[0]}"
+			optionalPrograms+=" ${gdebi[1]}"
+			gdebiInstalled=1;;
+		15) repositoryPackages+=" ${gparted[0]}"
+			optionalPrograms+=" ${gparted[1]}";;
+		16) if [ $ubuntuVersion == "12.04" ]; then
+				repositoryPackages+=" ${jockey[0]}"
+				optionalPrograms+=" ${jockey[1]}"
+			fi ;;
+		17) repositoryPackages+=" ${powerManager[0]}"
+			optionalPrograms+=" ${powerManager[1]}";;
+		18) repositoryPackages+=" ${schedule[0]}"
+			optionalPrograms+=" ${schedule[1]}";;
+		19) repositoryPackages+=" ${userSettings[0]}"
+			optionalPrograms+=" ${userSettings[1]}";;
+		20) repositoryPackages+=" ${virtualbox[0]}"
+			optionalPrograms+=" ${virtualbox[1]}";;
+		esac
+	done
 fi
 
-internet=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --separate-output --checklist "\nCategoria 10/10: Internet:" 24 $anchoDialogo 15 \
-1 "Chat multiprotocolo (Pidgin)" off \
-2 "Cliente de conexion remota. SSH, SFTP, etc (Remmina)" off \
-3 "Cliente de transferencia Ftp (Filezilla)" off \
-4 "Conexion a escritorio remoto (Teamviewer)" off \
-5 "Gestor de correo de Mozilla (Thunderbird)" off \
-6 "Gestor de correo estilo Outlook (Evolution)" off \
-7 "Mapa del mundo 3D con fotos (Google Earth)" off \
-8 "Mensajeria y comunicacion por voIp (Skype)" off \
-9 "Navegador web Chrome (de Google)" off \
-10 "Navegador web Chromium (basado en chrome, open-source)" off \
-11 "Navegador web Firefox (de Mozilla)" on \
-12 "Navegador web Midori (ligero)" off \
-13 "Navegador web Opera (de Opera Software)" off \
-14 "Sincronizacion con la nube de Dropbox" off \
-15 "Sincronizacion con la nibe de Ubuntu One" off`
+internet=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 10/10: $internet:" 24 $dialogWidth 15 \
+1 "$pidginDescription" off \
+2 "$remminaDescription" off \
+3 "$filezillaDescription" off \
+4 "$debTeamviewerDescription" off \
+5 "$thunderbirdDescription" off \
+6 "$evolutionDescription" off \
+7 "$debGoogleEarthDescription" off \
+8 "$debSkypeDescription" off \
+9 "$chromeDescription" off \
+10 "$chromiumDescription" off \
+11 "$firefoxDescription" on \
+12 "$midoriDescription" off \
+13 "$operaDescription" off \
+14 "$dropboxDescription" off \
+15 "$ubuntuoneDescription" off`
 
 if [ $? -eq 0 ]
 then
-   for i in $internet
-   do
-      case $i in
-		1) paquetesRepositorio+=" ${pidgin[0]}"
-		   programasOpcionales+=" ${pidgin[1]}";;
-		2) paquetesRepositorio+=" ${remmina[0]}"
-		   programasOpcionales+=" ${remmina[1]}";;
-		3) paquetesRepositorio+=" ${filezilla[0]}"
-		   programasOpcionales+=" ${filezilla[1]}";;
+	for i in $internet
+	do
+		case $i in
+		1) repositoryPackages+=" ${pidgin[0]}"
+			optionalPrograms+=" ${pidgin[1]}";;
+		2) repositoryPackages+=" ${remmina[0]}"
+			optionalPrograms+=" ${remmina[1]}";;
+		3) repositoryPackages+=" ${filezilla[0]}"
+			optionalPrograms+=" ${filezilla[1]}";;
 		4) if [ `uname -i` == "x86_64" ]
-           then
-               urlsDeb+=" ${debTeamviewer64[0]}"
-               paquetesDeb+=" ${debTeamviewer64[1]}"
-               programasOpcionales+=" ${debTeamviewer64[2]}"
-           else
-               urlsDeb+=" ${debTeamviewer32[0]}"
-               paquetesDeb+=" ${debTeamviewer32[1]}"
-               programasOpcionales+=" ${debTeamviewer32[2]}"
-           fi ;;
-		5) paquetesRepositorio+=" ${thunderbird[0]}"
-		   programasOpcionales+=" ${thunderbird[1]}" ;;
-		6) paquetesRepositorio+=" ${evolution[0]}"
-		   programasOpcionales+=" ${evolution[1]}" ;;
+			then
+				debUrls+=" ${debTeamviewer64[0]}"
+				debPackages+=" ${debTeamviewer64[1]}"
+				optionalPrograms+=" ${debTeamviewer64[2]}"
+			else
+				debUrls+=" ${debTeamviewer32[0]}"
+				debPackages+=" ${debTeamviewer32[1]}"
+				optionalPrograms+=" ${debTeamviewer32[2]}"
+			fi ;;
+		5) repositoryPackages+=" ${thunderbird[0]}"
+			optionalPrograms+=" ${thunderbird[1]}" ;;
+		6) repositoryPackages+=" ${evolution[0]}"
+			optionalPrograms+=" ${evolution[1]}" ;;
 		7) if [ `uname -i` == "x86_64" ]
-		   then
-				urlsDeb+=" ${debGoogleEarth64[0]}"
-				paquetesDeb+=" ${debGoogleEarth64[1]}"
-				programasOpcionales+=" ${debGoogleEarth64[2]}"
-		   else
-				urlsDeb+=" ${debGoogleEarth32[0]}"
-				paquetesDeb+=" ${debGoogleEarth32[1]}"
-				programasOpcionales+=" ${debGoogleEarth32[2]}"
-		   fi ;;
+			then
+				debUrls+=" ${debGoogleEarth64[0]}"
+				debPackages+=" ${debGoogleEarth64[1]}"
+				optionalPrograms+=" ${debGoogleEarth64[2]}"
+			else
+				debUrls+=" ${debGoogleEarth32[0]}"
+				debPackages+=" ${debGoogleEarth32[1]}"
+				optionalPrograms+=" ${debGoogleEarth32[2]}"
+			fi ;;
 		8) if [ `uname -i` == "x86_64" ]
-		   then
-				urlsDeb+=" ${debSkype64[0]}"
-				paquetesDeb+=" ${debSkype64[1]}"
-				programasOpcionales+=" ${debSkype64[2]}"
-		   else
-				urlsDeb+=" ${debSkype32[0]}"
-				paquetesDeb+=" ${debSkype32[1]}"
-				programasOpcionales+=" ${debSkype32[2]}"
-		   fi ;;
-		9) repositoriosTerceros+="${repositorioChrome[0]} 2>>log.txt; "
-		   descripcionRepoTerceros+="   ${repositorioChrome[1]}\n"
-		   repositorioChrome[2]=1
-		   programasOpcionales+=" ${chrome[1]}" ;;
-		10) paquetesRepositorio+=" ${chromium[0]}"
-		   programasOpcionales+=" ${chromium[1]}" ;;
-		11) paquetesRepositorio+=" ${firefox[0]}"
-		    programasOpcionales+=" ${firefox[1]}" ;;
-		12) paquetesRepositorio+=" ${midori[0]}"
-		    programasOpcionales+=" ${midori[1]}" ;;
-		13) repositoriosTerceros+="${repositorioOpera[0]} 2>>log.txt; "
-		    descripcionRepoTerceros+="   ${repositorioOpera[1]}\n"
-		    repositorioOpera[2]=1
-		    programasOpcionales+=" ${opera[1]}" ;;
-		14) if [ $instalaNemo -eq 1 ]; then
+			then
+				debUrls+=" ${debSkype64[0]}"
+				debPackages+=" ${debSkype64[1]}"
+				optionalPrograms+=" ${debSkype64[2]}"
+			else
+				debUrls+=" ${debSkype32[0]}"
+				debPackages+=" ${debSkype32[1]}"
+				optionalPrograms+=" ${debSkype32[2]}"
+			fi ;;
+		9) thirdPartyRepositories+="${chromeRepository[0]} 2>>$logFile; "
+			thirdPartyRepositoriesSummary+="   ${chromeRepository[1]}\n"
+			chromeRepository[2]=1
+			optionalPrograms+=" ${chrome[1]}" ;;
+		10) repositoryPackages+=" ${chromium[0]}"
+			optionalPrograms+=" ${chromium[1]}" ;;
+		11) repositoryPackages+=" ${firefox[0]}"
+			optionalPrograms+=" ${firefox[1]}" ;;
+		12) repositoryPackages+=" ${midori[0]}"
+			optionalPrograms+=" ${midori[1]}" ;;
+		13) thirdPartyRepositories+="${operaRepository[0]} 2>>$logFile; "
+			thirdPartyRepositoriesSummary+="   ${operaRepository[1]}\n"
+			operaRepository[2]=1
+			optionalPrograms+=" ${opera[1]}" ;;
+		14) if [ $nemoInstalled -eq 1 ]; then
 				dropbox[0]="nemo-dropbox"
 			fi
-			paquetesRepositorio+=" ${dropbox[0]}"
-		    programasOpcionales+=" ${dropbox[1]}" ;;
-		15) paquetesRepositorio+=" ${ubuntuone[0]}"
-		    programasOpcionales+=" ${ubuntuone[1]}" ;;
-      esac
-   done
+			repositoryPackages+=" ${dropbox[0]}"
+			optionalPrograms+=" ${dropbox[1]}" ;;
+		15) repositoryPackages+=" ${ubuntuone[0]}"
+			optionalPrograms+=" ${ubuntuone[1]}" ;;
+		esac
+	done
 fi
 
-if [ $instalaNemo -eq 0 ]
+if [ $nemoInstalled -eq 0 ]
 then
-	paquetesRepositorio+=" ${terminalXfce[0]}"
-	programasBase+=" ${terminalXfce[1]}"
+	repositoryPackages+=" ${xfceTerminal[0]}"
+	basePrograms+=" ${xfceTerminal[1]}"
 fi
 
 ########################################################################################################################
-# PASO 4: ACCIÓN A REALIZAR AL FINALIZAR LA INSTALACIÓN
+# STEP 4: FINAL ACTIONS AFTER THE INSTALLATION PROCESS
 ########################################################################################################################
-titulo="Paso 4/$totalPasos: Accion a realizar al finalizar la instalacion:"
-echo "$titulo">>log.txt
+title="$step 4/$totalSteps: $titleMessage4:"
+echo "$title">>$logFile		
 
-accion=1
-seleccionados=()
-until [ $accion -eq 0 ] && [ ${#seleccionados[*]} -gt 0 ] # Se muestra el cuadro de diálogo hasta que se pulse "Aceptar".
+action=1
+selected=()
+# Loop until "Acept" button is pressed
+until [ $action -eq 0 ] && [ ${#selected[*]} -gt 0 ]
 do
-   menu=`dialog --title "$titulo" --backtitle "$descripcion" --stdout --menu "Seleccionar una accion:" 13 $anchoDialogo 5 \
-   1 "Mostrar log. Esperar confirmacion. Reiniciar." \
-   2 "Mostrar log. Esperar confirmacion. Apagar." \
-   3 "Mostrar log. Esperar confirmacion. Salir a consola." \
-   4 "Reiniciar automaticamente." \
-   5 "Apagar automaticamente."`
-   accion=$?
-   seleccionados=($menu)
+	menu=`dialog --title "$title" --backtitle "$description" --stdout --menu "$dialogMessage12:" 13 $dialogWidth 5 \
+	1 "$menuMessage41" \
+	2 "$menuMessage42" \
+	3 "$menuMessage43" \
+	4 "$menuMessage44" \
+	5 "$menuMessage45"`
+	action=$?
+	selected=($menu)
 done
 for m in $menu
 do
-   case $m in
-      1) accionPostInstalacion=1;;
-      2) accionPostInstalacion=2;;
-      3) accionPostInstalacion=3;;
-      4) accionPostInstalacion=4;;
-      5) accionPostInstalacion=5;;
-   esac
+	case $m in
+	1) postInstallationAction=1;;
+	2) postInstallationAction=2;;
+	3) postInstallationAction=3;;
+	4) postInstallationAction=4;;
+	5) postInstallationAction=5;;
+	esac
 done
 
 ########################################################################################################################
-# PASO 5: RESUMEN DE LAS APLICACIONES A INSTALAR
+# STEP 5: SUMMARY OF APPLICATIONS TO INSTALL
 ########################################################################################################################
-titulo="Paso 5/$totalPasos: Resumen de las aplicaciones a instalar:"
-echo "$titulo">>log.txt
-if [ $instalaLightdm -eq 0 ]; then
-	dialog --title "$titulo" --backtitle "$descripcion" --msgbox "\n$escritorioXfce\n\n\n$descripcionRepoTerceros\n\n$programasBase\n\n$programasOpcionales" $altoDialogo $anchoDialogo
+title="$step 5/$totalSteps: $titleMessage5:"
+echo "$title">>$logFile
+if [ $lightdmInstalled -eq 0 ]; then
+	dialog --title "$title" --backtitle "$description" --msgbox "\n$xfceDesktop\n\n\n$thirdPartyRepositoriesSummary\n\n$basePrograms\n\n$optionalPrograms" $dialogHeight $dialogWidth
 else
-	dialog --title "$titulo" --backtitle "$descripcion" --msgbox "\n$escritorioXfce\n\n\n$gestorEscritorios\n\n\n$descripcionRepoTerceros\n\n$programasBase\n\n$programasOpcionales" $altoDialogo $anchoDialogo
+	dialog --title "$title" --backtitle "$description" --msgbox "\n$xfceDesktop\n\n\n$desktopManagerSummary\n\n\n$thirdPartyRepositoriesSummary\n\n$basePrograms\n\n$optionalPrograms" $dialogHeight $dialogWidth
 fi
 
 
 ########################################################################################################################
-# PASO 6: INSTALAR FUENTES DE MICROSOFT
+# STEP 6: MICROSOFT FONTS INSTALLATION
 ########################################################################################################################
-titulo="Paso 6/$totalPasos: Instalar fuentes truetype de Microsoft:"
-echo "$titulo">>log.txt
+title="$step 6/$totalSteps: $titleMessage6:"
+echo "$title">>$logFile
 clear
-apt-get -y install ttf-mscorefonts-installer --fix-missing 2>>log.txt
+apt-get -y install ttf-mscorefonts-installer --fix-missing 2>>$logFile
 
 ########################################################################################################################
-# PASO 7: ACTUALIZAR REPOSITORIOS
+# STEP 7: UPDATE REPOSITORIES
 ########################################################################################################################
-titulo="Paso 7/$totalPasos: Actualizando Repositorios ..."
-echo "$titulo">>log.txt
-comandos=""
-if [ -n "$repositoriosTerceros" ]
+title="$step 7/$totalSteps: $titleMessage7"
+echo "$title">>$logFile
+commands=""
+if [ -n "$thirdPartyRepositories" ]
 then
-	echo "Repositorios de terceros: $repositoriosTerceros">>log.txt
-	comandos+="echo 'Agregando repositorios de terceros ...'; "
-	# Se agregan los repositorios de terceros necesarios
-	comandos+="$repositoriosTerceros"
-	comandos+="echo \n'Actualizando repositorios ...'; "
+	echo "$logInfo1: $thirdPartyRepositories">>$logFile
+	commands+="echo $infoMessage3; "
+	commands+="$thirdPartyRepositories"
+	commands+="echo \n$titleMessage7; "
 fi
-comandos+="apt-get update --fix-missing 2>>log.txt"
-eval $comandos | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+commands+="apt-get update --fix-missing 2>>$logFile"
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 
 ########################################################################################################################
-# PASO 8: ACTUALIZAR SISTEMA OPERATIVO
+# STEP 8: UPDATE OPERATING SYSTEM
 ########################################################################################################################
-titulo="Paso 8/$totalPasos: Actualizando Sistema Operativo ..."
-echo "$titulo">>log.txt
-apt-get -y dist-upgrade --fix-missing 2>>log.txt | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+title="$step 8/$totalSteps: $titleMessage8"
+echo "$title">>$logFile
+apt-get -y dist-upgrade --fix-missing 2>>$logFile | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 
 ########################################################################################################################
-# PASO 9: INSTALAR ESCRITORIO XFCE
+# STEP 9: INSTALL XFCE DESKTOP
 ########################################################################################################################
-titulo="Paso 9/$totalPasos: Instalando Escritorio Xfce ..."
-echo "$titulo">>log.txt
-apt-get -y install xfce4 2>&1 | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+title="$step 9/$totalSteps: $titleMessage9"
+echo "$title">>$logFile
+apt-get -y install xfce4 2>&1 | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 if [ $? -ne 0 ]
 then
-   echo "Se ha producido al menos un error instalando el escritorio Xfce. Se aborta la instalacion" >>log.txt
-   echo "Se ha producido al menos un error instalando el escritorio Xfce. Se aborta la instalacion"
-   exit 1
+	# Error detected. Canceling installation process.
+	echo "$infoMessage5" >>$logFile
+	echo "$infoMessage5"
+	exit 1
 fi
 
 ########################################################################################################################
-# PASO 10: INSTALAR APLICACIONES
+# STEP 10: INSTALL APPLICATIONS
 ########################################################################################################################
-titulo="Paso 10/$totalPasos: Instalando aplicaciones ..."
-comandos="echo '$titulo'>>log.txt;"
-# Se instalan los paquetes del repositorio estándar
-if [ $instalaNemo -eq 1 ]
+title="$step 10/$totalSteps: $titleMessage10"
+commands="echo '$title'>>$logFile;"
+# Install standard repository packages
+if [ $nemoInstalled -eq 1 ]
 then
-	# Se instala Nemo
-	comandos+="apt-get -y install ${nemo[0]} --no-install-recommends --fix-missing 2>>log.txt;"
-	# Se establece como explorador de ficheros predeterminado Nemo
-	comandos+="mkdir -p /home/$usuario/.config/xfce4 2>>log.txt;"
-	comandos+="cp ./conf/helpers.rc /home/$usuario/.config/xfce4/ 2>>log.txt;"
-	comandos+="mkdir -p /etc/skel/.config/xfce4 2>>log.txt;"
-        comandos+="cp ./conf/helpers.rc /etc/skel/.config/xfce4/ 2>>log.txt;"
-        comandos+="mkdir -p /home/$usuario/.local/share/xfce4/helpers 2>>log.txt;"
-        comandos+="cp ./conf/nemo.desktop /home/$usuario/.local/share/xfce4/helpers/ 2>>log.txt;"
-	comandos+="mkdir -p /etc/skel/.local/share/xfce4/helpers 2>>log.txt;"
-	comandos+="cp ./conf/nemo.desktop /etc/skel/.local/share/xfce4/helpers/ 2>>log.txt;"
-	# Se asocia los previews de imágenes y videos a Nemo por medio de ffmpegthumbnailer
-	comandos+="mkdir /usr/share/thumbnailers 2>>log.txt;"
-	comandos+="cp ./conf/video.thumbnailer /usr/share/thumbnailers/ 2>>log.txt;"
+	# Install Nemo file browser
+	commands+="apt-get -y install ${nemo[0]} --no-install-recommends --fix-missing 2>>$logFile;"
+	# Set Nemo file browser to system default
+	commands+="mkdir -p /home/$user/.config/xfce4 2>>$logFile;"
+	commands+="cp ./conf/helpers.rc /home/$user/.config/xfce4/ 2>>$logFile;"
+	commands+="mkdir -p /etc/skel/.config/xfce4 2>>$logFile;"
+	commands+="cp ./conf/helpers.rc /etc/skel/.config/xfce4/ 2>>$logFile;"
+	commands+="mkdir -p /home/$user/.local/share/xfce4/helpers 2>>$logFile;"
+	commands+="cp ./conf/nemo.desktop /home/$user/.local/share/xfce4/helpers/ 2>>$logFile;"
+	commands+="mkdir -p /etc/skel/.local/share/xfce4/helpers 2>>$logFile;"
+	commands+="cp ./conf/nemo.desktop /etc/skel/.local/share/xfce4/helpers/ 2>>$logFile;"
+	# Set Nemo file browser to show previews of photos and videos throught ffmpegthumbnailer package
+	commands+="mkdir /usr/share/thumbnailers 2>>$logFile;"
+	commands+="cp ./conf/video.thumbnailer /usr/share/thumbnailers/ 2>>$logFile;"
+	commands+="chown $user:$user -R /home/$user/.local 2>>$logFile;"
 fi
-comandos+="apt-get -y install $paquetesRepositorio --fix-missing 2>>log.txt;"
+commands+="apt-get -y install $repositoryPackages --fix-missing 2>>$logFile;"
 
-# Se instala el tema de iconos de Faenza
-comandos+="apt-get -y install ${faenza[0]} --fix-missing 2>>log.txt;"
+# Install icon theme Faenza
+commands+="apt-get -y install ${faenza[0]} --fix-missing 2>>$logFile;"
 
-# Se instala el administrador de Grub2
-if [ ${repositorioGrubCustomizer[2]} -eq 1 ]
+# Install Grub2 application
+if [ ${grubcustomizerRepository[2]} -eq 1 ]
 then
-	comandos+="apt-get -y install ${grubcustomizer[0]} --fix-missing 2>>log.txt;"
-fi
-
-# Se instalan los paquetes de terceros
-if [ ${repositorioChrome[2]} -eq 1 ]
-then
-   comandos+="apt-get -y install ${chrome[0]} --fix-missing 2>>log.txt;"
-fi
-if [ ${repositorioOpera[2]} -eq 1 ]
-then
-   comandos+="apt-get -y install ${opera[0]} --fix-missing 2>>log.txt;"
-fi
-if [ ${repositoriojDownloader[2]} -eq 1 ]
-then
-   comandos+="apt-get -y install ${jdownloader[0]} --fix-missing 2>>log.txt;"
-fi
-if [ ${repositorioJupiter[2]} -eq 1 ]
-then
-   comandos+="apt-get -y install ${jupiter[0]} --fix-missing 2>>log.txt;"
-fi
-if [ ${repositorioNemo[2]} -eq 1 ]
-then
-	comandos+="apt-get -y install ${nemo[0]} --fix-missing 2>>log.txt;"
+	commands+="apt-get -y install ${grubcustomizer[0]} --fix-missing 2>>$logFile;"
 fi
 
-# Se instalan los paquetes deb sin repositorios
-if [ -n "$urlsDeb" ] # Se comprueba que no sea un string vacio
+# Install third-party packages
+if [ ${chromeRepository[2]} -eq 1 ]
 then
-   # Se descargan e instalan los paquetes debs de los programas seleccionados
-   arrayUrlsDeb=($urlsDeb)
-   arrayPaquetesDeb=($paquetesDeb)
-   # Si no se ha instalado gdebi, se procede a instalar ahora
-   if [ $instalaGdebi -eq 0 ]; then
-		comandos+="apt-get -y install ${gdebi[0]} --fix-missing 2>>log.txt;"
-   fi   
-   for indice in ${!arrayUrlsDeb[*]}
-   do
-      comandos+="wget -O /var/cache/apt/archives/${arrayPaquetesDeb[$indice]} ${arrayUrlsDeb[$indice]} 2>&1;"      
-      comandos+="gdebi --n /var/cache/apt/archives/${arrayPaquetesDeb[$indice]} 2>>log.txt;"
-   done
+	commands+="apt-get -y install ${chrome[0]} --fix-missing 2>>$logFile;"
 fi
-eval $comandos | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+if [ ${operaRepository[2]} -eq 1 ]
+then
+	commands+="apt-get -y install ${opera[0]} --fix-missing 2>>$logFile;"
+fi
+if [ ${jDownloaderRepository[2]} -eq 1 ]
+then
+	commands+="apt-get -y install ${jdownloader[0]} --fix-missing 2>>$logFile;"
+fi
+if [ ${nemoRepository[2]} -eq 1 ]
+then
+	commands+="apt-get -y install ${nemo[0]} --fix-missing 2>>$logFile;"
+fi
 
-if [ -n "$scripts" ]
+# Install deb packages without repositories
+if [ -n "$debUrls" ]
 then
-   # Se ejecutan los scripts de otros programas. Aquellos que necesitan instalación personalizada: descomprimir, etc.
-   for script in $scripts
-   do
-      bash $script "$usuario" "$titulo" "$descripcion;"
-   done
+	# Download and install deb packages of selected programs by user during installation proccess.
+	debUrlArray=($debUrls)
+	debPackageArray=($debPackages)
+	# Install gdebi package if it wasn't installed before
+	if [ $gdebiInstalled -eq 0 ]; then
+		commands+="apt-get -y install ${gdebi[0]} --fix-missing 2>>$logFile;"
+	fi   
+	for index in ${!debUrlArray[*]}
+	do
+		commands+="wget -O /var/cache/apt/archives/${debPackageArray[$index]} ${debUrlArray[$index]} 2>&1;"      
+		commands+="gdebi --n /var/cache/apt/archives/${debPackageArray[$index]} 2>>$logFile;"
+	done
 fi
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
+
+if [ $delugedInstalled -eq 1 ]; then
+	bash $scriptDeluged "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$user" "$delugedDaemonStartName" "$delugedDaemonStartDescription" "$delugedDaemonStopName" "$delugedDaemonStopDescription" "$delugedWebDescription" 2>>$logFile
+fi
+
+if [ $pyloadInstalled -eq 1 ]; then
+	bash $scriptPyload "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$user" "$pyloadWebDescription" "$pyloadStartName" "$pyloadStartDescription" "$pyloadStopName" "$pyloadStopDescription" 2>>$logFile
+fi
+
+if [ $qbittorrentDaemonInstalled -eq 1 ]; then
+	bash $scriptQbittorrentDaemon "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$user" "$qbittorrentWebDescription" "$qbittorrentStartName" "$qbittorrentStartDescription" "$qbittorrentStopName" "$qbittorrentStopDescription" 2>>$logFile
+fi
+
+if [ $linuxTVInstalled -eq 1 ]; then
+	bash $scriptLinuxTV "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$tvLinuxName" "$tvLinuxDescription" 2>>$logFile
+fi
+
+if [ $utorrentInstalled -eq 1 ]; then
+	bash $scriptUtorrent "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$user" "$utorrentScriptMessage1" "$utorrentScriptMessage2" "$utorrentWebDescription" "$utorrentStartName" "$utorrentStartDescription" "$utorrentStopName" "$utorrentStopDescription" 2>>$logFile
+fi
+	
+########################################################################################################################
+# STEP 11: CLEAN UNNECESSARY PACKAGES
+########################################################################################################################
+title="$step 11/$totalSteps: $titleMessage11"
+echo "$title">>$logFile
+commands="apt-get -y remove $packagesToDelete 2>>$logFile;" 
+# Clean unnecessary dependencies
+commands+="apt-get -y autoremove 2>>$logFile;"
+# Clean cache of downloaded programs
+commands+="apt-get -y clean 2>>$logFile"
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 
 ########################################################################################################################
-# PASO 11: LIMPIAR PAQUETES USADOS EN LA INSTALACION
+# STEP 12: CONFIGURATIONS
 ########################################################################################################################
-titulo="Paso 11/$totalPasos: Limpiando paquetes no usados ..."
-echo "$titulo">>log.txt
-comandos="apt-get -y remove $programasEliminar 2>>log.txt;" 
-# Se eliminan dependencias innecesarias
-comandos+="apt-get -y autoremove 2>>log.txt;"
-# Se elimina la caché de disco de programas descargados
-comandos+="apt-get -y clean 2>>log.txt"
-eval $comandos | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+title="$step 12/$totalSteps: $titleMessage12"
+echo "$title">>$logFile
 
-########################################################################################################################
-# PASO 12: CONFIGURACIONES VARIAS
-########################################################################################################################
-titulo="Paso 12/$totalPasos: Realizando configuraciones finales ..."
-echo "$titulo">>log.txt
+commands="echo $infoMessage6 2>>$logFile;"
+# Copy new icons to system icons folder
+commands+="cp -R ./icons/hicolor/* /usr/share/icons/hicolor/ 2>>$logFile;"
+# Update icon cache to refresh system icons
+commands+="gtk-update-icon-cache /usr/share/icons/hicolor/ 2>>$logFile;"
+# Copy additional Xfce icons to Faenza theme
+commands+="mkdir -p /usr/share/icons/Faenza ;"
+commands+="cp -R ./icons/Faenza/* /usr/share/icons/Faenza/ 2>>$logFile;"
+# Copy icons from Faenza-Custom folder (it includes Linux Mint's computer icon, nice for Nemo file browser).
+commands+="mkdir -p /usr/share/icons/Faenza-Custom ;"
+commands+="cp -R ./icons/Faenza-Custom/* /usr/share/icons/Faenza-Custom/ 2>>$logFile;"
+# Copy Faenza icons to aMule application
+commands+="mkdir -p /usr/share/amule/skins ;"
+commands+="cp -R ./icons/amule-faenza/* /usr/share/amule/skins 2>>$logFile;"
 
-comandos="echo 'Agregando iconos nuevos a la caché del sistema ...' 2>>log.txt;"
-# Se copian los nuevos iconos (aplicaciones, sistema, etc) a la carpeta de iconos del sistema
-comandos+="cp -R ./icons/hicolor/* /usr/share/icons/hicolor/ 2>>log.txt;"
-# Se actualiza la caché de iconos para que coja los nuevos iconos
-comandos+="gtk-update-icon-cache /usr/share/icons/hicolor/ 2>>log.txt;"
-# Se copian más iconos al tema Faenza para completar los necesarios para Xfce y el icono utorrent-Faenza
-comandos+="mkdir -p /usr/share/icons/Faenza ;"
-comandos+="cp -R ./icons/Faenza/* /usr/share/icons/Faenza/ 2>>log.txt;"
-# Se copian los iconos de Faenza-Custom (Faenza-Dark con icono de PC tomado de Linux-Mint).
-comandos+="mkdir -p /usr/share/icons/Faenza-Custom ;"
-comandos+="cp -R ./icons/Faenza-Custom/* /usr/share/icons/Faenza-Custom/ 2>>log.txt;"
-# Se añade el tema faenza a aMule
-comandos+="mkdir -p /usr/share/amule/skins ;"
-comandos+="cp -R ./icons/amule-faenza/* /usr/share/amule/skins 2>>log.txt;"
+# Delete Debian background from Grub
+commands+="echo $infoMessage7 2>>$logFile;"
+commands+="rm /usr/share/images/desktop-base/desktop-grub.png 2>>$logFile;"
+commands+="update-grub2 2>>$logFile;"
 
-comandos+="echo 'Eliminando fondo de Debian del Grub ...' 2>>log.txt;"
-comandos+="rm /usr/share/images/desktop-base/desktop-grub.png 2>>log.txt;"
-comandos+="update-grub2 2>>log.txt;"
+# Create system startup script for configuring Xfce desktop
+commands+="echo $infoMessage8 2>>$logFile;"
+commands+="cp ./sh/xfce4-config.sh /usr/share/xfce4/ 2>>$logFile;"
+commands+="sed -i \"s/%PYLOADINSTALLED%/$pyloadInstalled/g\" /usr/share/xfce4/xfce4-config.sh 2>>$logFile;"	
+commands+="sed -i \"s/%SYSTEMMONITORINSTALLED%/$systemMonitorInstalled/g\" /usr/share/xfce4/xfce4-config.sh 2>>$logFile;"	
+commands+="sed -i \"s/%MESSAGE1%/$xfce4ConfigScriptMessage1/g\" /usr/share/xfce4/xfce4-config.sh 2>>$logFile;"	
+commands+="sed -i \"s/%MESSAGE2%/$xfce4ConfigScriptMessage2/g\" /usr/share/xfce4/xfce4-config.sh 2>>$logFile;"	
+commands+="sed -i \"s/%MESSAGE3%/$xfce4ConfigScriptMessage3/g\" /usr/share/xfce4/xfce4-config.sh 2>>$logFile;"	
+commands+="cp ./autostart/xfce4-config.desktop /etc/xdg/autostart/ 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$xfce4ConfigComment/g\" /etc/xdg/autostart/xfce4-config.desktop 2>>$logFile;"
 
-comandos+="echo 'Creando lanzador al script de configuracion de Xfce ...' 2>>log.txt;"
-# Se copia el fichero del script de configuración al sistema
-comandos+="cp ./sh/xfce4-config.sh /usr/share/xfce4/ 2>>log.txt;"
-# Se copia el lanzador al fichero de configuración
-comandos+="cp ./autostart/xfce4-config.desktop /etc/xdg/autostart/ 2>>log.txt;"
-if [ $instalaPyload -eq 1 ]; then
-	comandos+="sed -i 's/ARGUMENTO/pyLoadInstalado/g' /etc/xdg/autostart/xfce4-config.desktop 2>>log.txt;"	
-else
-	comandos+="sed -i 's/ARGUMENTO//g' /etc/xdg/autostart/xfce4-config.desktop 2>>log.txt;"	
+# Setting Xfce desktop panel
+commands+="echo $infoMessage9 2>>$logFile;"
+commands+="mkdir -p /home/$user/.config/xfce4/xfconf/xfce-perchannel-xml 2>>$logFile;"
+commands+="mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml 2>>$logFile;"
+# Copy configuration file of Xfce's panel to folders: "home" and "skel".
+commands+="cp ./conf/xfce4-panel.xml /home/$user/.config/xfce4/xfconf/xfce-perchannel-xml 2>>$logFile;"
+commands+="cp ./conf/xfce4-panel.xml /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml 2>>$logFile;"
+
+# Setting samba's configuration file
+commands+="echo $infoMessage10 2>>$logFile;"
+# Backup from samba's configuration file
+commands+="cp /etc/samba/smb.conf /etc/samba/smb.conf.backup 2>>$logFile;"
+# Allow sharing resources from anywhere
+commands+="sed -i 's/\[global\]/\[global\]\nusershare owner only = False/g' /etc/samba/smb.conf 2>>$logFile;"
+
+# Setting Thunar's custom actions
+commands+="echo $infoMessage11 2>>$logFile;"
+# Copy files of Thunar's custom actions
+commands+="cp ./conf/uca.xml /etc/xdg/Thunar/uca.xml 2>>$logFile;"
+commands+="cp ./sh/share.sh /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE1%/$shareScriptMessage1/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE2%/$shareScriptMessage2/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE3%/$shareScriptMessage3/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE4%/$shareScriptMessage4/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE5%/$shareScriptMessage5/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE6%/$shareScriptMessage6/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE7%/$shareScriptMessage7/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE8%/$shareScriptMessage8/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE9%/$shareScriptMessage9/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE10%/$shareScriptMessage10/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE11%/$shareScriptMessage11/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE12%/$shareScriptMessage12/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+commands+="sed -i \"s/%MESSAGE13%/$shareScriptMessage13/g\" /etc/xdg/Thunar/share.sh 2>>$logFile;"
+	
+if [ $nemoInstalled -eq 1 ]; then
+	commands+="echo $infoMessage12 2>>$logFile;"
+	commands+="mv /usr/share/xsessions/cinnamon.desktop /usr/share/xsessions/cinnamon.desktop.old 2>>$logFile;"
+	commands+="mv /usr/share/xsessions/cinnamon2d.desktop /usr/share/xsessions/cinnamon2d.desktop.old 2>>$logFile;"
 fi
 
-comandos+="echo 'Configurando panel del escritorio del usuario ...' 2>>log.txt;"
-comandos+="mkdir -p /home/$usuario/.config/xfce4/xfconf/xfce-perchannel-xml 2>>log.txt;"
-comandos+="mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml 2>>log.txt;"
-# Se copia el fichero de configuración del panel a la carpeta home del usuario. Se copia también a la carpeta skel para que cuando se creen nuevos usuarios, hereden estos ficheros de configuración
-comandos+="cp ./conf/xfce4-panel.xml /home/$usuario/.config/xfce4/xfconf/xfce-perchannel-xml 2>>log.txt;"
-comandos+="cp ./conf/xfce4-panel.xml /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml 2>>log.txt;"
-
-comandos+="echo 'Configurando comparticiones samba ...' 2>>log.txt;"
-# Se hace copia de seguridad del fichero de configuración de samba
-comandos+="cp /etc/samba/smb.conf /etc/samba/smb.conf.backup 2>>log.txt;"
-# Se añade línea de configuración en samba para permitir comparticiones de cualquier directorio del sistema
-comandos+="sed -i 's/\[global\]/\[global\]\nusershare owner only = False/g' /etc/samba/smb.conf 2>>log.txt;"
-
-comandos+="echo 'Configurando acciones personalizadas de Thunar ...' 2>>log.txt;"
-# Se copia fichero de acciones personalizadas de Thunar y script de compartición de carpetas
-comandos+="cp ./conf/uca.xml /etc/xdg/Thunar/uca.xml 2>>log.txt;"
-comandos+="cp ./sh/share.sh /etc/xdg/Thunar/share.sh 2>>log.txt;"
-
-if [ $instalaNemo -eq 1 ]; then
-	comandos+="echo 'Eliminando entradas a Cinnamon en lista de escritorios de Lightdm ...' 2>>log.txt;"
-	comandos+="mv /usr/share/xsessions/cinnamon.desktop /usr/share/xsessions/cinnamon.desktop.old 2>>log.txt;"
-	comandos+="mv /usr/share/xsessions/cinnamon2d.desktop /usr/share/xsessions/cinnamon2d.desktop.old 2>>log.txt;"
-fi
-
-if [ $instalaLightdm -eq 1 ]
+if [ $lightdmInstalled -eq 1 ]
 then
-	comandos+="echo 'Personalizando pantalla de login de Lightdm ...' 2>>log.txt;"
-	comandos+="cp /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf.backup 2>>log.txt;"
-	comandos+="cp ./conf/lightdm-gtk-greeter.conf /etc/lightdm/ 2>>log.txt;"
-	if [ $versionUbuntu == "12.04" ]; then
-		# El tema que se pone por defecto es "greybird-git"
-		comandos+="sed -i 's/theme-name=TEMA/theme-name=greybird-git/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>log.txt;"
+	commands+="echo $infoMessage13 2>>$logFile;"
+	commands+="cp /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf.backup 2>>$logFile;"
+	commands+="cp ./conf/lightdm-gtk-greeter.conf /etc/lightdm/ 2>>$logFile;"
+	if [ $ubuntuVersion == "12.04" ]; then
+		# The default lightdm theme is "greybird-git"
+		commands+="sed -i 's/%THEME%/greybird-git/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>$logFile;"
 	else
-		if [ $versionUbuntu == "12.10" ]; then
-			# El tema que se pone por defecto es "Greybird"
-			comandos+="sed -i 's/theme-name=TEMA/theme-name=Greybird/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>log.txt;"
+		if [ $ubuntuVersion == "12.10" ]; then
+			# The default lightdm theme is "Greybird"
+			commands+="sed -i 's/%THEME%/Greybird/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>$logFile;"
 		else
-			# El tema que se pone por defecto es "Blackbird"
-			comandos+="sed -i 's/theme-name=TEMA/theme-name=Blackbird/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>log.txt;"
+			# The default lightdm theme is "Blackbird"
+			commands+="sed -i 's/%THEME%/Blackbird/g' /etc/lightdm/lightdm-gtk-greeter.conf 2>>$logFile;"
 		fi
 	fi
-	if [ $versionUbuntu == "12.04" || $versionUbuntu == "12.10" ] ; then
-		# Se cambia el icono por defecto de lightdm a uno de xfce-faenza
-		comandos+="cp /usr/share/lightdm-gtk-greeter/greeter.ui /usr/share/lightdm-gtk-greeter/greeter.ui.backup 2>>log.txt;"
-		comandos+="sed -i 's/<property name=\"icon_name\">computer/<property name=\"icon_name\">xfce/g' /usr/share/lightdm-gtk-greeter/greeter.ui 2>>log.txt;"
+	if [ $ubuntuVersion == "12.04" || $ubuntuVersion == "12.10" ] ; then
+		# Change default icon of lightdm to an icon of Faenza's theme
+		commands+="cp /usr/share/lightdm-gtk-greeter/greeter.ui /usr/share/lightdm-gtk-greeter/greeter.ui.backup 2>>$logFile;"
+		commands+="sed -i 's/<property name=\"icon_name\">computer/<property name=\"icon_name\">xfce/g' /usr/share/lightdm-gtk-greeter/greeter.ui 2>>$logFile;"
 	fi
 
-	comandos+="echo 'Configurando Lightdm para que inicie por defecto el escritorio Xfce...' 2>>log.txt;"
-	# Equivale a editar /etc/lightdm/lightdm.conf e insertar o cambiar la línea: user-session=xfce
-	comandos+="/usr/lib/lightdm/lightdm-set-defaults -s xfce 2>>log.txt;"
+	commands+="echo $infoMessage14 2>>$logFile;"
 
-	if [ $inicioAutomatico -eq 1 ]
+	# Setting LightDM for launching Xfce desktop by default
+	# Equivalent to edit /etc/lightdm/lightdm.conf and insert or change the line: user-session=xfce
+	commands+="/usr/lib/lightdm/lightdm-set-defaults -s xfce 2>>$logFile;"
+
+	if [ $automaticLogin -eq 1 ]
 	then
-		comandos+="echo 'Configurando Lightdm para el inicio de sesion automatico del usuario...'>>log.txt;"
-		comandos+="echo \"autologin-user=$usuario\" >>/etc/lightdm/lightdm.conf 2>>log.txt;"
-		comandos+="echo 'autologin-user-timeout=0' >>/etc/lightdm/lightdm.conf 2>>log.txt;"
+		# Setting Lightdm for user automatic login
+		commands+="echo $infoMessage15>>$logFile;"
+		commands+="echo \"autologin-user=$user\" >>/etc/lightdm/lightdm.conf 2>>$logFile;"
+		commands+="echo 'autologin-user-timeout=0' >>/etc/lightdm/lightdm.conf 2>>$logFile;"
 	fi
 fi
 
-if [ $instalaCompiz -eq 1 ] # Se ha instalado efectos de escritorio
+if [ $compizInstalled -eq 1 ]
 then
-   comandos+="echo 'Creando autoarranque de Compiz en el inicio de sesion ...' 2>>log.txt;"
-   # Se copia lanzador de arranque global. Para todas las sesiones de usuario
-   comandos+="cp ./autostart/compiz.desktop /etc/xdg/autostart/ 2>>log.txt;"
-   # Se crea lanzador de arranque desactivado para la sesión de usuario (Por defecto, compiz está desactivado)
-   comandos+="mkdir -p /home/$usuario/.config/autostart 2>>log.txt;"
-   comandos+="echo '[Desktop Entry]' > /home/$usuario/.config/autostart/compiz.desktop 2>>log.txt;"
-   comandos+="echo 'Hidden=true' >> /home/$usuario/.config/autostart/compiz.desktop 2>>log.txt;"
-   comandos+="chmod 664 /home/$usuario/.config/autostart/compiz.desktop 2>>log.txt;"
-   # Se crea lanzador de arranque desactivado en el directorio skel para los futuros usuarios que se creen del sistema.
-   comandos+="mkdir -p /etc/skel/.config/autostart 2>>log.txt;"
-   comandos+="cp /home/$usuario/.config/autostart/compiz.desktop /etc/skel/.config/autostart 2>>log.txt;"
+	# Create Compiz's startup at system login
+	commands+="echo $infoMessage16 2>>$logFile;"
+	# Copy startup to common startup folder
+	commands+="cp ./autostart/compiz.desktop /etc/xdg/autostart/ 2>>$logFile;"
+	commands+="sed -i \"s/%COMMENT%/$compizComment/g\" /etc/xdg/autostart/compiz.desktop 2>>$logFile;"
+	# Create Compiz's startup launcher disabled for user session
+	commands+="mkdir -p /home/$user/.config/autostart 2>>$logFile;"
+	commands+="echo '[Desktop Entry]' > /home/$user/.config/autostart/compiz.desktop 2>>$logFile;"
+	commands+="echo 'Hidden=true' >> /home/$user/.config/autostart/compiz.desktop 2>>$logFile;"
+	commands+="chmod 664 /home/$user/.config/autostart/compiz.desktop 2>>$logFile;"
+	# Create Compiz's startup launcher disabled for other system users (in "skel" folder)
+	commands+="mkdir -p /etc/skel/.config/autostart 2>>$logFile;"
+	commands+="cp /home/$user/.config/autostart/compiz.desktop /etc/skel/.config/autostart 2>>$logFile;"
 fi
 
-comandos+="chown $usuario:$usuario -R /home/$usuario/.config 2>>log.txt;"
-comandos+="chown $usuario:$usuario -R /home/$usuario/.local 2>>log.txt;"
+commands+="chown $user:$user -R /home/$user/.config 2>>$logFile;"
 
-if [ $instalaNetworkManager -eq 1 ] # Se ha instalado Network Manager
+if [ $networkManagerInstalled -eq 1 ]
 then
-	comandos+="echo 'Desconfigurando interfaces de red ...' 2>>log.txt;"
-	# Se hace una copia del fichero de interfaces de red
-	comandos+="cp /etc/network/interfaces /etc/network/interfaces.old 2>>log.txt;"
-	# Se copia fichero sin configuración de las interfaces de red
-	comandos+="cp ./conf/interfaces /etc/network/ 2>>log.txt;"
+	# Unsetting network interfaces
+	commands+="echo $infoMessage17 2>>$logFile;"
+	# Backup from network interfaces file
+	commands+="cp /etc/network/interfaces /etc/network/interfaces.old 2>>$logFile;"
+	# Copy default network interfaces file (no configuration)
+	commands+="cp ./conf/interfaces /etc/network/ 2>>$logFile;"
 fi
-eval $comandos | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 
-if [ $configuraAmuleDaemon -eq 1 ]
+if [ $amuleDaemonInstalled -eq 1 ]
 then
-	comandos+="echo 'Configuracion por defecto de aMule ...' 2>>log.txt;"
-	# Este fichero establece el tema Faenza por defecto y activa el control remoto de la aplicación
-	comandos+="mkdir /home/$usuario/.aMule 2>>log.txt;"
-	comandos+="cp ./conf/amule.conf /home/$usuario/.aMule 2>>log.txt;"
-	comandos+="chown -R $usuario:$usuario /home/$usuario/.aMule 2>>log.txt;"
-	comandos+="mkdir /etc/skel/.aMule 2>>log.txt;"
-	comandos+="cp ./conf/amule.conf /etc/skel/.aMule 2>>log.txt;"
-	# Se selecciona el tema Faenza en aMuleGui
-	comandos+="sed -i 's/Skin=/Skin=System:faenza.zip/g' /home/$usuario/.aMule/remote.conf 2>>log.txt"
+	# aMule's default configuration
+	commands="echo $infoMessage18 2>>$logFile;"
+	# This file enables aMule's remote control
+	commands+="mkdir /home/$user/.aMule 2>>$logFile;"
+	commands+="cp ./conf/amule.conf /home/$user/.aMule 2>>$logFile;"
+	commands+="cp ./conf/remote.conf /home/$user/.aMule 2>>$logFile;"
+	commands+="chown -R $user:$user /home/$user/.aMule 2>>$logFile;"
+	commands+="mkdir /etc/skel/.aMule 2>>$logFile;"
+	commands+="cp ./conf/amule.conf /etc/skel/.aMule 2>>$logFile;"
+	commands+="cp ./conf/remote.conf /etc/skel/.aMule 2>>$logFile;"
+	eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth
 	
-	eval $comandos | dialog --title "$titulo" --backtitle "$descripcion" --progressbox $altoDialogo $anchoDialogo
-	# En el caso de haber seleccionado amule-daemon, se ejecuta script de configuración
-	bash ./sh/amule-daemon.sh "$usuario" "$titulo" "$descripcion"
+	# Run configuration script
+	bash $scriptAmuleDaemon "$title" "$description" "$terminalMessage1" "$terminalMessage2" "$terminalMessage3" "$terminalMessage4" "$user" "$amuleScriptMessage1" "$amuledDaemonStartName" "$amuledDaemonStartDescription" "$amuledDaemonStopName" "$amuledDaemonStopDescription" 2>>$logFile
 fi
 
 ########################################################################################################################
-# PASO 13: LOG DE INSTALACION
+# STEP 13: INSTALLATION LOG
 ########################################################################################################################
-cp ./log.txt /home/$usuario >/dev/null
-chown $usuario:$usuario /home/$usuario/log.txt >/dev/null 2>&1
+mkdir /home/$user/logs >/dev/null
+cp $logFile "/home/$user/logs/xfce-installer.log" >/dev/null
+chown -R $user:$user /home/$user/logs/ >/dev/null 2>&1
 
-case $accionPostInstalacion in
-	1) textoPI="Se procede a reiniciar el sistema."
-		accionPI="reboot"
-		echo "Mostrar log y reinicir sistema..." >> log.txt;;
-	2) textoPI="Se procede a apagar el sistema."
-		accionPI="poweroff"
-		echo "Mostrar log y apagar sistema..." >> log.txt;;
-	3) textoPI="Se procede a salir a consola."
-		accionPI="cd /home/$usuario"
-		echo "Mostrar log y salir a consola..." >> log.txt;;
-	4) accionPI="reboot"
-		echo "Reiniciar sistema..." >> log.txt;;
-	5) accionPI="poweroff"
-		echo "Apagar sistema..." >> log.txt;;
+case $postInstallationAction in
+	1) PItext=$infoMessage19 	# Show log and reboot system
+		PIaction="reboot"
+		echo $infoMessage20 >> $logFile;;
+	2) PItext=$infoMessage21  	# Show log and shutdown system
+		PIaction="poweroff"
+		echo $infoMessage22 >> $logFile;;
+	3) PItext=$infoMessage23 	# Show log and exit to console
+		PIaction="cd /home/$user"
+		echo $infoMessage24 >> $logFile;;
+	4) PIaction="reboot"		# Reboot system
+		echo $infoMessage19 >> $logFile;;
+	5) PIaction="poweroff"		# Shutdown system
+		echo $infoMessage21 >> $logFile;;
 esac
 	
-if [ $accionPostInstalacion -le 3 ]
+if [ $postInstallationAction -le 3 ]
 then
-	dialog --title "Log de la instalacion:" --backtitle "$descripcion" --textbox "./log.txt" $altoDialogo $anchoDialogo
+	# Installation log
+	dialog --title "$infoMessage25" --backtitle "$description" --textbox "$logFile" $dialogHeight $dialogWidth
 
-	alto=13
-	texto=""
-	if [ $configuraAmuleDaemon -eq 1 ]
+	height=15
+	text=""
+	if [ $amuleDaemonInstalled -eq 1 ]
 	then
-		alto=$(($alto+3))
-		texto+="\nPara conectarse a aMule-Daemon:
-Menu->Internet->aMuleGUI-> Conectar a:localhost;\n
-Puerto:4712; usuario:amule; contrasena:admin\n"
+		height=$(($height+3))
+		# aMule information
+		text+="\n$infoMessage26\n$infoMessage27\n$infoMessage28\n"
 	fi
-	if [ $instalaDeluged -eq 1 ]
+	if [ $delugedInstalled -eq 1 ]
 	then
-		alto=$(($alto+5))
-		texto+="\nPara conectarse a Deluged:\n
-1. Aplicacion: Menu->Internet->Deluge-> Usar asistente de conexion remota.\n
-   Para agregar usuario remoto: nano .config/deluge/auth-> $usuario:CONTRASENA:10\n
-2. Web: Menu->Internet->Deluge-Web-> contraseña: deluge\n
-   Para cambiar contrasena: Usar preferencias en pagina web de deluge"
+		height=$(($height+5))
+		# Deluge information
+		text+="\n$infoMessage29\n$infoMessage30\n$infoMessage31\n$infoMessage32\n$infoMessage33\n"
 	fi
-	if [ $instalaPyload -eq 1 ]
+	if [ $pyloadInstalled -eq 1 ]
 	then
-		alto=$(($alto+3))
-		texto+="\nPara conectarse a Pyload:
-Menu->Internet->pyLoad Web-> usuario:<<ElQueEspecifique>>; contrasena:<<LaQueEspecifique>>\n
-La primera vez que ejecute pyLoad le pedira especificar usuario y contrasena."
+		height=$(($height+3))
+		# Pyload information
+		text+="\n$infoMessage34\n$infoMessage35\n$infoMessage36\n"
 	fi
-	if [ $instalaQbittorrentDaemon -eq 1 ]
+	if [ $qbittorrentDaemonInstalled -eq 1 ]
 	then
-		alto=$(($alto+2))
-		texto+="\nPara conectarse a qBittorrent Nox Daemon:
-Menu->Internet->qBittorrent Nox Daemon-> usuario:admin; contrasena:adminadmin\n"
+		height=$(($height+2))
+		# Qbittorrent information
+		text+="\n$infoMessage37\n$infoMessage38\n"
 	fi
 	
-	if [ $instalaUtorrent -eq 1 ]
+	if [ $utorrentInstalled -eq 1 ]
 	then
-		alto=$(($alto+2))
-		texto+="\nPara conectarse a Utorrent Server:
-Menu->Internet->utorrent-> usuario:admin; contrasena:\n"
+		height=$(($height+2))
+		# uTorrent information
+		text+="\n$infoMessage39\n$infoMessage40\n"
 	fi
 
-	texto+="\nPara volver a consultar el log ejecutar desde consola:\n
-nano /home/$usuario/log.txt\n
-\n$textoPI\n"
-	dialog --title "Instalacion finalizada." --backtitle "$descripcion" --msgbox "$texto" $alto $anchoDialogo
+	# Log information
+	text+="\n$infoMessage41\nnano /home/$user/logs/xfce-installer.log\n\n$PItext\n"
+	dialog --title "$infoMessage42" --backtitle "$description" --msgbox "$text" $height $dialogWidth
 fi
-eval $accionPI 2>>log.txt
+eval "$PIaction" 2>>$logFile

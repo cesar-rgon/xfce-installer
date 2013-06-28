@@ -1,5 +1,5 @@
 # Configuration for /etc/init.d/deluge-daemon
 # The init.d script will only run if this variable non-empty.
-DELUGED_USER="USERNAME"
+DELUGED_USER="%USER%"
 # Should we run at startup?
 RUN_AT_STARTUP="YES"

@@ -133,9 +133,13 @@
 
   <action>
     <icon>gcr-key</icon>
-    <name>Abrir como administrador</name>
+    <name>Open as Root</name>
+	<name xml:lang="en_GB">Open as Root</name>
+	<name xml:lang="es">Abrir como administrador</name>
     <command>gksudo xdg-open %f</command>
-    <description>Abrir como administrador</description>
+    <description>Open as Root</description>
+	<description xml:lang="en_GB">Open as Root</description>
+	<description xml:lang="es">Abrir como administrador</description>
     <patterns>*</patterns>
     <directories/>
     <text-files/>
@@ -143,34 +147,26 @@
 
   <action>
     <icon>filefind</icon>
-    <name>Buscador</name>
+    <name>Searcher</name>
+	<name xml:lang="en_GB">Searcher</name>
+	<name xml:lang="es">Buscador</name>
     <command>catfish --path=%f</command>
-    <description>Buscador de ficheros y carpetas</description>
+    <description>File and folder searcher</description>
+	<description xml:lang="en_GB">File and folder searcher</description>
+	<description xml:lang="es">Buscador de ficheros y carpetas</description>
     <patterns>*</patterns>
     <directories/>
   </action>
 
   <action>
     <icon>nm-device-wired-secure</icon>
-    <name>Compartir / Descompartir</name>
+    <name>Share / Unshare</name>
+	<name xml:lang="en_GB">Share / Unshare</name>
+	<name xml:lang="es">Compartir / Descompartir</name>
     <command>bash /etc/xdg/Thunar/share.sh %n %f</command>
     <description></description>
     <patterns>*</patterns>
     <directories/>
   </action>
-
-<action>
-	<icon>file-manager</icon>
-	<name>Tamaño</name>
-	<command>zenity --list --width 500 --height 550 --column &quot;Nombre de carpeta o fichero seleccionado (sin espacios)&quot; --column &quot;Tamaño&quot; `du -chs %N | tr -d &apos; &apos; | awk -F &quot; &quot; &apos;{print $2,$1}&apos;`</command>
-	<description></description>
-	<patterns>*</patterns>
-	<directories/>
-	<audio-files/>
-	<image-files/>
-	<other-files/>
-	<text-files/>
-	<video-files/>
-</action>
 
 </actions>

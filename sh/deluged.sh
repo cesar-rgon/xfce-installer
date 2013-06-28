@@ -1,42 +1,62 @@
 #!/bin/bash
-# Se comprueba si el script se está ejecutando como usuario administrador (root tiene id = 0)
+
+# Arguments
+title="${1}"
+description="${2}"
+terminalMessage1="${3}"
+terminalMessage2="${4}"
+terminalMessage3="${5}"
+terminalMessage4="${6}"
+user="${7}"
+delugedStartName="${8}"
+delugedStartDescription="${9}"
+delugedStopName="${10}"
+delugedStopDescription="${11}"
+delugedWebDescription="${12}"
+
+# Other variables
+tempDir="/tmp/xfce-installer.tmp"
+logFile="$tempDir/log.txt"
+dialogWidth=$((`tput cols` - 4))
+dialogHeight=$((`tput lines` - 6))
+
+# Check if the script is being running like root user (root user has id equal to 0)
 if [ $(id -u) != 0 ]
 then
-	echo "Este script debe ser ejecutado como usuario administrador."
-	echo "Para ejecutar el script: sudo bash ./deluged.sh"
-	echo "Si el script tiene permiso de ejecucion basta con: sudo ./deluged.sh"
-	echo "Para dar permiso de ejecucion: chmod +x deluged.sh"
+	echo "$terminalMessage1"
+	echo "$terminalMessage2 sudo bash ./deluged.sh"
+	echo "$terminalMessage3 sudo ./deluged.sh"
+	echo "$terminalMessage4 chmod +x deluged.sh"
 	exit 1
 fi
 
-# Se copia fichero de configuración del script de arranque de deluged
-comandos+="cp conf/deluge-daemon /etc/default 2>>log.txt;"
+# Copy deluge-daemon's config file to the system
+commands="cp ./conf/deluge-daemon /etc/default 2>>$logFile;"
 
-# Se establece el usuario de la aplicación dentro del fichero que se acaba de copiar
-comandos+="sed -i \"s/USERNAME/$1/g\" /etc/default/deluge-daemon 2>>log.txt;"	
+# Set application's user name in this file
+commands+="sed -i \"s/%USER%/$user/g\" /etc/default/deluge-daemon 2>>$logFile;"	
 
-# Se copia fichero que permite iniciar/parar deluged como demonio
-comandos+="cp sh/deluge-daemon /etc/init.d 2>>log.txt;"
+# Copy deluge-daemon's startup script to the system
+commands+="cp ./sh/deluge-daemon /etc/init.d 2>>$logFile;"
 
-# Se añade usuario y contraseña al fichero de autenticación de deluge
-# comandos+="mkdir -p /home/$1/.config/deluge 2>>log.txt;"
-# comandos+="echo \"$1:deluge:10\" >> /home/$1/.config/deluge/auth 2>>log.txt;"
-# comandos+="chown -R $1:$1 /home/$1/.config 2>>log.txt;"
+# Add user name and password to Deluge's authentication file
+# commands+="mkdir -p /home/$user/.config/deluge 2>>$logFile;"
+# commands+="echo \"$user:deluge:10\" >> /home/$user/.config/deluge/auth 2>>$logFile;"
+# commands+="chown -R $user:$user /home/$user/.config 2>>$logFile;"
 
-# Se activa la conexión remota
-comandos+="sed -i 's/\"allow_remote\": false,/\"allow_remote\": true,/g' /home/$1/.config/deluge/core.conf 2>>log.txt;"
+# Copy menu launchers to start and finish Deluged and application's web client.
+commands+="cp ./menu/deluged-start.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$delugedStartName/g\" /usr/share/applications/deluged-start.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$delugedStartDescription/g\" /usr/share/applications/deluged-start.desktop 2>>$logFile;"
+commands+="cp ./menu/deluged-stop.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$delugedStopName/g\" /usr/share/applications/deluged-stop.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$delugedStopDescription/g\" /usr/share/applications/deluged-stop.desktop 2>>$logFile;"
+commands+="cp ./menu/deluge-web.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$delugedWebDescription/g\" /usr/share/applications/deluge-web.desktop 2>>$logFile;"
 
-# Se desactiva el modo clásico en Deluge
-comandos+="sed -i 's/\"classic_mode\": true,/\"classic_mode\": false,/g' /home/$1/.config/deluge/gtkui.conf 2>>log.txt;"
+# Create deluged startup links
+commands+="update-rc.d -f deluge-daemon defaults 2>>$logFile;"
+# To remove them: # update-rc.d -f deluge-daemon remove
 
-# Se copian los lanzadores del menú para iniciar y finalizar deluged y cliente web
-comandos+="cp ./menu/deluged-start.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/deluged-stop.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/deluge-web.desktop /usr/share/applications 2>>log.txt;"
-
-# Se crean enlaces simbólicos para que deluged se inicie automáticamente desde consola
-comandos+="update-rc.d -f deluge-daemon defaults 2>>log.txt;"
-# En caso de querer quitar este inicio de deluged más adelante, escribir en consola: # update-rc.d -f deluge-daemon remove
-
-# Se ejecutan todos los comandos
-eval $comandos | dialog --title "$2" --backtitle "$3" --progressbox 20 76
+# Execute all commands
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth

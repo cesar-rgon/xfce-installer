@@ -22,7 +22,7 @@ DAEMON=/usr/bin/$NAME
 DAEMON_ARGS="--webui-port=8081"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/qbittorrent
-USER=USERNAME
+USER=%USER%
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0

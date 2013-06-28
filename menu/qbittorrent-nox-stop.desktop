@@ -1,9 +1,8 @@
 [Desktop Entry]
-Name=qBittorrent Nox Daemon - Finalizar
+Name=%NAME%
 Exec=gksudo /etc/init.d/qbittorrent-nox-daemon stop
 Icon=application-x-bittorrent
 Terminal=false
 Type=Application
 Categories=Network;P2P;
-Comment=Finalizar servidor Qbittorrent Nox para descargas P2P
-
+Comment=%COMMENT%

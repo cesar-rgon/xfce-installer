@@ -1,40 +1,56 @@
 #!/bin/bash
-# Se comprueba si el script se está ejecutando como usuario administrador (root tiene id = 0)
+
+# Arguments
+title="${1}"
+description="${2}"
+terminalMessage1="${3}"
+terminalMessage2="${4}"
+terminalMessage3="${5}"
+terminalMessage4="${6}"
+user="${7}"
+pyloadWebDescription="${8}"
+pyloadStartName="${9}"
+pyloadStartDescription="${10}"
+pyloadStopName="${11}"
+pyloadStopDescription="${12}"
+
+# Other variables
+tempDir="/tmp/xfce-installer.tmp"
+logFile="$tempDir/log.txt"
+dialogWidth=$((`tput cols` - 4))
+dialogHeight=$((`tput lines` - 6))
+
+# Check if the script is being running like root user (root user has id equal to 0)
 if [ $(id -u) != 0 ]
 then
-	echo "Este script debe ser ejecutado como usuario administrador."
-	echo "Para ejecutar el script: sudo bash ./utorrent.sh"
-	echo "Si el script tiene permiso de ejecucion basta con: sudo ./utorrent.sh"
-	echo "Para dar permiso de ejecucion: chmod +x utorrent.sh"
+	echo ""
+	echo "$terminalMessage1"
+	echo "$terminalMessage2 sudo bash ./utorrent.sh"
+	echo "$terminalMessage3 sudo ./utorrent.sh"
+	echo "$terminalMessage4 chmod +x utorrent.sh"
+	echo ""
 	exit 1
 fi
 
-# Se copia fichero que permite iniciar/parar pyLoad como demonio
-comandos+="cp sh/pyload-daemon /etc/init.d 2>>log.txt;"
+# Copy pyLoad's startup script to the system
+commands="cp ./sh/pyload-daemon /etc/init.d 2>>$logFile;"
 
-# Se establece el usuario de la aplicación dentro del script que se acaba de copiar
-comandos+="sed -i \"s/USERNAME/$1/g\" /etc/init.d/pyload-daemon 2>>log.txt;"	
+# Set application's user name in this file
+commands+="sed -i \"s/%USER%/$user/g\" /etc/init.d/pyload-daemon 2>>$logFile;"	
 
-# Se copian los lanzadores del menú para iniciar y finalizar pyLoad
-comandos+="cp ./menu/pyload-cli.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/pyload-start.desktop /usr/share/applications 2>>log.txt;"
-comandos+="cp ./menu/pyload-stop.desktop /usr/share/applications 2>>log.txt;"
+# Copy menu launchers to start and finish pyLoad and application's web client.
+commands+="cp ./menu/pyload-cli.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$pyloadWebDescription/g\" /usr/share/applications/pyload-cli.desktop 2>>$logFile;"
+commands+="cp ./menu/pyload-start.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$pyloadStartName/g\" /usr/share/applications/pyload-start.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/pyloadStartDescription/g\" /usr/share/applications/pyload-start.desktop 2>>$logFile;"
+commands+="cp ./menu/pyload-stop.desktop /usr/share/applications 2>>$logFile;"
+commands+="sed -i \"s/%NAME%/$pyloadStopName/g\" /usr/share/applications/pyload-stop.desktop 2>>$logFile;"
+commands+="sed -i \"s/%COMMENT%/$pyloadStopDescription/g\" /usr/share/applications/pyload-stop.desktop 2>>$logFile;"
 
-# Se Crean enlaces simbólicos para que pyLoad se inicie automáticamente desde consola
-comandos+="update-rc.d -f pyload-daemon defaults 2>>log.txt;"
-# En caso de querer quitar este inicio de pyLoad más adelante, escribir en consola: # update-rc.d -f pyload-daemon remove
+# Create pyLoad startup links
+commands+="update-rc.d -f pyload-daemon defaults 2>>$logFile;"
+# To remove them: # update-rc.d -f pyload-daemon remove
 
-# No se crea lanzador de autoarranque con el inicio de sesión de Xfce ya que inicia automáticamente desde consola.
-# En caso de necesitar el autoarranque de Xfce, descomentar las siguientes líneas. 
-#comandos+="echo 'Creando autoarranque en el inicio de sesión ...' >>log.txt;"
-#comandos+="echo 'Creando autoarranque en el inicio de sesión ...';"
-#comandos+="echo '[Desktop Entry]' > /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Name=pyLoad Daemon' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Exec=/usr/bin/pyLoadCore --daemon' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Type=Application' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Categories=Network;FileTransfer' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Icon=pyload' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-#comandos+="echo 'Comment=Gestor de descargas directas' >> /etc/xdg/autostart/pyload-daemon.desktop;"
-
-# Se ejecutan todos los comandos
-eval $comandos | dialog --title "$2" --backtitle "$3" --progressbox 20 76
+# Execute all commands
+eval "$commands" | dialog --title "$title" --backtitle "$description" --progressbox $dialogHeight $dialogWidth

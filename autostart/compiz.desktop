@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 Name=compiz
-Comment=Decorador de ventanas con efectos 3D
+Comment=%COMMENT%
 Exec=compiz --replace
 Terminal=false

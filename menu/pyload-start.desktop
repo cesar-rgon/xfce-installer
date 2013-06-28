@@ -1,9 +1,8 @@
 [Desktop Entry]
-Name=pyLoad Daemon - Iniciar
+Name=%NAME%
 Exec=gksudo /etc/init.d/pyload-daemon start
 Icon=pyload
 Terminal=false
 Type=Application
 Categories=Network;P2P;
-Comment=Iniciar servidor pyLoad para descargas directas
-
+Comment=%COMMENT%
