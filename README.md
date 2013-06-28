@@ -23,10 +23,9 @@ This script installs Xfce desktop and a set of programs according to user needs 
 * More dynamic, it offers applications from different desktops. Not limited only to Xfce desktop.
 * Modern desktop themes (Faenza icons and GreyBird theme).
 * Automatic installation of third-party repositories.
-* Soporte multi-idioma: textos en ingles y espanol incluidos en el script.
 
 
-# Instalador Xfce
+# Instalador Xfce v1.1
 Script instalador del escritorio Xfce en hogar, oficina o servidor con gran variedad de programas para instalar.
 Este script instala el escritorio Xfce y un conjunto de programas conforme a las necesidades del usuario a partir del sistema base Ubuntu Server.
 
@@ -38,6 +37,7 @@ Este script instala el escritorio Xfce y un conjunto de programas conforme a las
 * Instalar solo las aplicaciones seleccionadas por el usuario.
 * Ofrece una gran variedad de programas de diferentes tipos.
 * Configuracion automatica de aplicaciones para dejarlas preparadas para su uso.
+* Soporte multi-idioma: textos en ingles y espanol incluidos en el script.
 
 ### ¿Por que usar este script frente a otras alternativas?
 * No es una distro. Es un script. Rapido de descargar y usar.
