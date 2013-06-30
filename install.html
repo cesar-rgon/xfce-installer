@@ -59,7 +59,7 @@
 					</h3>
 					<ul>
 						<li><a href="http://www.ubuntu.com/download/server"
-							target="_blank">Descargar Ubuntu Server</a> 12.04, 12.10 o 13.04
+							target="_blank">Descargar Ubuntu Server</a> 12.04 ó 13.04
 							desde la <a href="http://www.ubuntu.com/" target="_blank">web
 								de Ubuntu</a>.</li>
 						<li><a
@@ -79,36 +79,21 @@
 						Instalación
 						</h3>
 						<ul id="instalation">
-							<li>Descargar script:<br /> 1. <span class="bold">Desde
-									esta web</span>: para después copiarlo al ordenador destino.<br /> 2.
-								<span class="bold">Desde consola</span>: en el ordenador
-								destino.
-								<pre><code>$ wget -O cesar-rgon-xfce-installer.tar.gz
- https://github.com/cesar-rgon/xfce-installer/tarball/master</code></pre>
+							<li>Descargar script: Desde esta web o bien desde consola en el ordenador destino.
+								<pre><code>$ wget -O xfce-installer.tar.gz
+ https://github.com/cesar-rgon/xfce-installer/archive/master.tar.gz</code></pre>
 							</li>
-							<br />
 
 							<li>Descomprimir script en carpeta "home"<br />
-							1. <span class="bold">Desde fichero .tar.gz:</span>
-							<pre><code>$ tar -xvf cesar-rgon-xfce-installer*.tar.gz</code></pre>
-							2. <span class="bold">Desde fichero .zip:</span>
-							<pre><code>$ sudo apt-get install unzip
-$ unzip cesar-rgon-xfce-installer*.zip</code></pre>
+							<pre><code>$ tar -xvf xfce-installer*.tar.gz
+$ rm xfce-installer*.tar.gz</code></pre>
 							</li>
-							<br />
 							
 							<li>Ejecutar script
-							<pre><code>$ cd cesar-rgon-xfce-installer*
+							<pre><code>$ cd xfce-installer*
 $ sudo ./install.sh</code></pre>
 							</li>
 							
-							<li>Pantalla inicial informativa:</li>
-							<p>
-								<img src="images/installation/install-01.jpg"
-									alt="Pantalla inicial informativa">
-							</p>
-							<br />
-
 							<li>Introducir nombre de usuario (no root) del sistema:</li>
 							<p>
 								<img src="images/installation/install-02.jpg"
@@ -254,9 +239,7 @@ $ sudo ./install.sh</code></pre>
 
 			<aside id="sidebar">
 				<a
-					href="https://github.com/cesar-rgon/xfce-installer/zipball/master"
-					class="button"> <small>Descargar</small> fichero zip </a> <a
-					href="https://github.com/cesar-rgon/xfce-installer/tarball/master"
+					href="https://github.com/cesar-rgon/xfce-installer/archive/master.tar.gz"
 					class="button"> <small>Descargar</small> fichero tar.gz </a>
 
 				<p class="repo-owner">
