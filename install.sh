@@ -116,7 +116,7 @@ function initVariables()
 	rarCompressor=("rar unrar" "  $rarCompressorDescription\n")
 	remmina=("remmina" "  $remminaDescription\n")
 	scanner=("simple-scan" "  $scannerDescription\n")
-	schedule=("gnome-schedule" "$scheduleDescription\n")
+	schedule=("gnome-schedule" "  $scheduleDescription\n")
 	screenshooter=("xfce4-screenshooter" "  $screenshooterDescription\n")
 	synaptic=("synaptic" "  $synapticDescription\n")
 	systemMonitor=("gnome-system-monitor" "  $systemMonitorDescription\n")
@@ -144,7 +144,7 @@ function initVariables()
 	# Deb packages (deb package URL - package name - description)
 	debGoogleEarth32=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_i386.deb" "google-earth-stable_current_i386.deb" "  $debGoogleEarthDescription\n")
 	debGoogleEarth64=("http://dl.google.com/dl/earth/client/current/google-earth-stable_current_amd64.deb" "google-earth-stable_current_amd64.deb" "  $debGoogleEarthDescription\n")
-	debPyload=("http://get.pyload.org/get/ubuntu" "pyload_linux.deb" "  $debPyloadDescription\n")
+	debPyload=("http://get.pyload.org/get/ubuntu" "pyload_linux.deb" " $debPyloadDescription\n")
 	debTeamviewer32=("http://www.teamviewer.com/download/teamviewer_linux.deb" "teamviewer_linux_32.deb" "  $debTeamviewerDescription\n")
 	debTeamviewer64=("http://www.teamviewer.com/download/teamviewer_linux_x64.deb" "teamviewer_linux_64.deb" "  $debTeamviewerDescription\n")
 	debSkype32=("http://www.skype.com/go/getskype-linux-beta-ubuntu-32" "skype_linux_32.deb" "  $debSkypeDescription\n")
@@ -573,7 +573,7 @@ then
 	done
 fi
 
-system=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 9/10: $systemTools:" 30 $dialogWidth 20 \
+system=`dialog --title "$title" --backtitle "$description" --stdout --separate-output --checklist "\n$category 9/10: $systemTools:" 29 $dialogWidth 20 \
 1 "$gnomeSoftwareCenterDescription" on \
 2 "$lxdeSoftwareCenterDescription" off \
 3 "$wineDescription" off \
