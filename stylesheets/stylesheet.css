@@ -651,4 +651,8 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
 	clear: both;
 }
 
+.icon {
+	float:right;
+	margin-top:20px;
+}
 
