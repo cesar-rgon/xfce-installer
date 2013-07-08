@@ -6,8 +6,8 @@ function initVariables()
 {
 	author="Cesar Rodriguez Gonzalez"
 	englishTranslationAuthors="Cesar Rodriguez Gonzalez. Isidro Rodriguez Gonzalez"
-	version="1.1"
-	lastDateModified="27-06-2013"
+	version="1.11"
+	lastDateModified="08-07-2013"
 	ubuntuVersion=`lsb_release -rs`
 	dialogWidth=$((`tput cols` - 4))
 	dialogHeight=$((`tput lines` - 6))
@@ -1074,12 +1074,15 @@ fi
 
 commands+="chown $user:$user -R /home/$user/.config 2>>$logFile;"
 
-if [ $networkManagerInstalled -eq 1 ]
+# Check if Xfce desktop and Network Manager have been installed
+commands+="dpkg -s xfce4 ${networkManager[0]} 1>/dev/null 2>$tempDir/errorPackageInstalled.log;"
+# If error log file is zero then both applications have been installed successful
+if [ $networkManagerInstalled -eq 1 ] && [ `stat --format="%s" $tempDir/errorPackageInstalled.log` == 0 ]
 then
 	# Unsetting network interfaces
 	commands+="echo $infoMessage17 2>>$logFile;"
 	# Backup from network interfaces file
-	commands+="cp /etc/network/interfaces /etc/network/interfaces.old 2>>$logFile;"
+	commands+="cp /etc/network/interfaces /etc/network/interfaces.old.`date +\"%d-%m-%y.%H:%M:%S\"` 2>>$logFile;"
 	# Copy default network interfaces file (no configuration)
 	commands+="cp ./conf/interfaces /etc/network/ 2>>$logFile;"
 fi
