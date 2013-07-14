@@ -1,0 +1,30 @@
+<div id="content-wrapper">
+	<div class="inner clearfix">
+		<aside id="sidebar">
+			<a href="https://github.com/cesar-rgon/xfce-installer/archive/master.tar.gz" class="button">
+				<small>{{download.title}}</small>{{download.file}}
+			</a>
+
+			<p class="repo-owner">
+				<a href="https://github.com/cesar-rgon/xfce-installer" target="_blank">Xfce Installer</a>
+				{{maintained}}
+				<a href="https://github.com/cesar-rgon" target="_blank">C&eacute;sar Rodr&iacute;guez Gonz&aacute;lez</a>.
+			</p>
+
+			<p>
+				{{generated}}
+				<a href="http://pages.github.com/" target="_blank">GitHub Pages</a>
+				{{theme}}
+				<a href="http://twitter.com/jasonlong" target="_blank">Jason Long</a>.
+				{{design}}
+				<a href="https://github.com/irgstudio" target="_blank">Isidro Rodr&iacute;guez Gonz&aacute;lez</a>
+				{{and}}
+				<a href="https://github.com/cesar-rgon" target="_blank">C&eacute;sar Rodr&iacute;guez Gonz&aacute;lez</a>.
+			</p>
+
+			<a href="{{urlFacebook}}" target="_blank">
+				<img src="../../images/template/facebook-logo.png" class="icon" alt="facebook"/>
+			</a>
+		</aside>
+	</div>
+</div>

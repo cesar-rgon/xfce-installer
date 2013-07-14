@@ -1,174 +1,23 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js">
-<!--<![endif]-->
 <head>
-<meta charset='utf-8'>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>Xfce Installer</title>
-<meta name="description"
-	content="Instalar Xfce para Ubuntu en hogar y servidor">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen" />
-<link rel="stylesheet" href="stylesheets/print.css" media="print" />
-<link href='http://fonts.googleapis.com/css?family=Ubuntu'
-	rel='stylesheet' type='text/css'>
-<script src="javascripts/modernizr-2.6.2.min.js"></script>
+	<title>Xfce Installer</title>
+	<script type="text/javascript">
+		// Detect browser language
+		function getBrowserLanguage(){
+			return navigator.language || navigator.userLanguage; 
+		}
+	</script>
 </head>
 
 <body>
-	<!--[if lt IE 7]>
-        <p class="chromeframe">Estás usando un navegador <strong>desfasado</strong>. Por favor <a href="http://browsehappy.com/">actualice su navegador</a> o <a href="http://www.google.com/chromeframe/?redirect=true">active Google Chrome Frame</a> para mejorar su experiencia.</p>
-    <![endif]-->
-	<header>
-		<div class="inner">
-			<h1>Xfce Installer</h1>
-			<h2>Instalar Xfce para Ubuntu en hogar y servidor</h2>
-			<a href="https://github.com/cesar-rgon/xfce-installer"
-				target="_blank" class="button"> <small>Ver proyecto en </small>GitHub
-			</a>
-			
-			<div id="sse2">
-				<div id="sses2">
-					<ul>
-						<li><a href="index.html">Inicio</a>
-						</li>
-						<li><a href="install.html">Instalación</a>
-						</li>
-						<li><a href="applications.html">Aplicaciones</a>
-						</li>
-						<li><a
-							href="https://github.com/cesar-rgon/xfce-installer/wiki/_pages"
-							target="_blank">Wiki</a>
-						</li>
-						<li><a
-							href="https://github.com/cesar-rgon/xfce-installer/issues"
-							target="_blank">Foro</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</header>
-
-
-	<div id="content-wrapper">
-		<div class="inner clearfix">
-			<section id="main-content">
-				<br />
-				<div id="sliderFrame">
-					<div id="ribbon"></div>
-					<div id="slider">
-						<img src="images/image-slider/image-slider-1.jpg" /> <img
-							src="images/image-slider/image-slider-2.jpg" /> <img
-							src="images/image-slider/image-slider-3.jpg" /> <img
-							src="images/image-slider/image-slider-4.jpg" /> <img
-							src="images/image-slider/image-slider-5.jpg" /> <img
-							src="images/image-slider/image-slider-6.jpg" />
-					</div>
-				</div>
-
-				<br />
-				<br />
-				<h2>Introducción</h2>
-
-				<p>
-					Este <a href="http://es.wikipedia.org/wiki/Script" target="_blank">script</a>
-					realiza la instalación del escritorio <a
-						href="http://www.xfce.org/" target="_blank">Xfce</a> y un conjunto
-					de programas según necesidades del usuario partiendo de la
-					instalación de un <a href="http://es.wikipedia.org/wiki/Ubuntu"
-						target="_blank">Ubuntu</a> Server base.
-				</p>
-
-				<h4>Características que ofrece</h4>
-
-				<ul>
-					<li>Instalación de escritorio Xfce con <a
-						href="http://es.wikipedia.org/wiki/Paquetes_de_software"
-						target="_blank">paquetes</a> necesarios.</li>
-					<li>Instalación desatendida de aplicaciones.</li>
-					<li><a href="http://es.wikipedia.org/wiki/Log_(registro)"
-						target="_blank">Log</a> de posibles errores durante el proceso de
-						instalación.</li>
-					<li>Posibilidad de apagar, reiniciar o mostrar log de errores
-						al finalizar el proceso de instalación.</li>
-					<li>Instalar sólo las utilidades seleccionadas y necesarias
-						por el usuario.</li>
-					<li>Ofrece una gran variedad de programas de diferentes tipos.</li>
-					<li>Configuraciones automáticas de aplicaciones para dejarlas
-						preparadas para su uso.</li>
-					<li>Soporte multi-idioma: textos en inglés y español incluidos en el script.</li>
-				</ul>
-				<h4>¿Por qué usar este script frente a otras alternativas?</h4>
-
-				<ul>
-					<li>No es una <a
-						href="http://es.wikipedia.org/wiki/Distribuci%C3%B3n_Linux"
-						target="_blank">distro</a>. Es un script. Rápido de descargar y
-						usar.</li>
-					<li>Es válido para hogares, oficinas y servidores.</li>
-					<li>Se puede instalar en diferentes versiones de Ubuntu:
-						12.04 y 13.04.</li>
-					<li>Menor consumo de recursos <a
-						href="http://es.wikipedia.org/wiki/Hardware" target="_blank">hardware</a>
-						del sistema.</li>
-					<li>Mayor personalización de aplicaciones a instalar.</li>
-					<li>Mayor periodo de mantenimiento del <a
-						href="http://es.wikipedia.org/wiki/Sistema_operativo"
-						target="_blank">sistema operativo</a> al tratarse de Ubuntu
-						Server.</li>
-					<li>Ahorra tiempo de <a
-						href="http://es.wikipedia.org/wiki/Configuraci%C3%B3n_(inform%C3%A1tica)"
-						target="_blank">configuración</a> posterior a la instalación de
-						aplicaciones.</li>
-					<li>Mayor dinamismo, ofrece aplicaciones de diferentes <a
-						href="http://es.wikipedia.org/wiki/Entorno_de_escritorio"
-						target="_blank">escritorios</a>. No se limita sólo a Xfce.</li>
-					<li>Tema de escritorio moderno (iconos <a
-						href="http://gnome-look.org/content/show.php/?content=128143"
-						target="_blank">Faenza</a> y tema <a
-						href="http://shimmerproject.org/project/greybird/" target="_blank">GreyBird</a>).</li>
-					<li>Instalación automática de <a
-						href="http://es.wikipedia.org/wiki/Repositorio" target="_blank">repositorios</a>
-						de terceros.</li>
-				</ul>
-			</section>
-
-			<aside id="sidebar">
-				<a
-					href="https://github.com/cesar-rgon/xfce-installer/archive/master.tar.gz"
-					class="button"> <small>Descargar</small> fichero tar.gz </a>
-
-				<p class="repo-owner">
-					<a href="https://github.com/cesar-rgon/xfce-installer" target="_blank">Xfce Installer</a> está
-					mantenido por <a href="https://github.com/cesar-rgon"
-						target="_blank">César Rodríguez González</a>.
-				</p>
-
-				<p>
-					Esta página fué generada por <a href="http://pages.github.com/" target="_blanck">GitHub Pages</a>
-					usando el tema Architect de <a
-						href="http://twitter.com/jasonlong" target="_blank">Jason Long</a>.
-					Modificaciones en diseño hechas por <a
-						href="https://github.com/irgstudio" target="_blank">Isidro
-						Rodríguez González</a> y <a href="https://github.com/cesar-rgon"
-						target="_blank">César Rodríguez González</a>.
-				</p>
-				<a href="https://www.facebook.com/XfceInstaller" target="_blank">
-					<img src="images/template/facebook-logo.png" class="icon" alt="facebook"/>
-				</a>
-			</aside>
-		</div>
-	</div>
-
-	<!-- Colocar JS al final para que sea lo último que se cargue. -->
-	<script src="javascripts/js-image-slider.js"></script>
-	<script src="javascripts/main.js"></script>
-
+	<script type="text/javascript">
+		if (getBrowserLanguage().substring(0,2) == "es") {
+			var url = location.protocol + '//' + location.host + location.pathname;
+			window.location.href = url.substring(0, url.lastIndexOf("/")) + "/html/es/index.html";
+		} else {
+			var url = location.protocol + '//' + location.host + location.pathname;
+			window.location.href = url.substring(0, url.lastIndexOf("/")) + "/html/en/index.html";
+		}
+	</script>
 </body>
 </html>

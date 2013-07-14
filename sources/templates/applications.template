@@ -1,0 +1,38 @@
+<aside id="sidebar">
+	<div id="acdnmenu">
+		<ul>
+			{{#each categoryList}}
+			<li>{{category}}
+				<ul>
+					{{#each applicationList}}
+						<li><a href="#{{id}}">{{name}}</a></li>
+					{{/each}}
+				</ul>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
+</aside>
+
+<section id="main-content">
+	<h2>{{title}}</h2>
+	<p>{{mainDescription}}.</p>
+
+	{{#each categoryList}}
+		<h3>{{category}}</h3>
+		{{#each applicationList}}
+			<div id="{{id}}" class="ficha-aplicacion">
+				<img src={{image}} alt={{name}} />
+				<div><label>{{name}}</label></div>
+				<div>
+					<span>{{description}}.</span>
+				</div>
+				<div>
+					<span>URL:</span>
+					<a href={{homepage}} target="_blank">{{homepage}}</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+		{{/each}}
+	{{/each}}
+</section>

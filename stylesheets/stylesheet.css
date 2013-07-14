@@ -69,6 +69,7 @@ header h2 {
 #main-content {
   width: 690px;
   float: left;
+  margin-top: -29px;
 }
 
 #main-content img {
@@ -291,17 +292,23 @@ footer a:hover {
 }
 
 /* Sección de instalación */
+.installation pre {
+	margin-top:5px;
+}
 
-#instalation img {
+.installation img {
     max-width: 685px;
     border: 2px solid #DEDEDE;
     border-radius: 10px;
+    margin-bottom: 23px;
 }
 
 /* Ficha de aplicación */
 
 .ficha-aplicacion img {
     float: left;
+	margin-bottom: 40px;
+	margin-left: 30px;
 }
 .ficha-aplicacion label {
     margin-left:20px;
@@ -310,18 +317,7 @@ footer a:hover {
 .ficha-aplicacion span {
     margin-left: 20px;
 }
-.ficha-aplicacion p {
-	font-family: 'Helvetica Neue', Helvetica, Arial, serif;
-	font-size: 12px;
-	font-weight: 400;
-	color: #3c3c3c;
-	margin-top:15px;
-	margin-bottom:50px;
-	padding-left:3px;
-	padding-right:3px;
-    border: 2px solid #DEDEDE;
-	border-radius: 6px;
-}
+
 
 /* Image Slider
 ================================================= */
@@ -332,7 +328,6 @@ footer a:hover {
   position:relative;
   width:100%;
   margin: 0 auto;
-  margin-top:-20px;
 } /*remove the "margin:0 auto;" if you want to align the whole slider to the left side*/
 
 #slider {
@@ -401,9 +396,9 @@ div.mc-caption a:hover {
 /* ------ built-in navigation bullets wrapper ------*/
 div.navBulletsWrapper  {
   top:447px; left:270px; /* Its position is relative to the #slider */
-  width:150px;
+  width:242px;
   background:none;
-  padding-left:20px;
+  margin-left:-40px;
   position:relative;
   z-index:5;
   cursor:pointer;
@@ -440,7 +435,7 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
 
 #sse2 {
     /*You can decorate the menu's container, such as adding background images through this block*/
-  margin-top:10px;
+	margin-top:10px;
     height: 30px;
     padding: 4px;
     border-radius: 6px;
@@ -496,7 +491,6 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
 ================================================= */
  
 .clearfix:after {
-  clear: both;
   content: '.';
   display: block;
   visibility: hidden;
@@ -656,3 +650,23 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
 	margin-top:20px;
 }
 
+.language {
+	float: right;
+	color: #fff;
+    font: normal 14px arial;
+	margin-top:21px;
+}
+
+.language label {
+	padding-right: 5px;
+}
+
+.language select {
+	border: 0;
+	border-radius: 5px;
+	background: white;
+}
+
+#content-and-aside h2 {
+	margin-top: 29px;
+}

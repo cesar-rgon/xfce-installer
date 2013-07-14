@@ -1,0 +1,26 @@
+<div id="sliderFrame">
+	<div id="ribbon"></div>
+	<div id="slider">
+		{{#each imageSlider}}
+			<img src={{imagePath}} />
+		{{/each}}
+	</div>
+</div>
+
+<br /><br />
+<h2>{{introduction}}</h2>
+<p>{{{presentation}}}.</p>
+
+<h4>{{features}}</h4>
+<ul>
+	{{#each featureList}}
+		<li>{{{feature}}}.</li>
+	{{/each}}
+</ul>
+
+<h4>{{benefits}}</h4>
+<ul>
+	{{#each benefitList}}
+		<li>{{{benefit}}}.</li>
+	{{/each}}
+</ul>

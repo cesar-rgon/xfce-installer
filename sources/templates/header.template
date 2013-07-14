@@ -1,0 +1,31 @@
+<!--[if lt IE 7]>
+	<p class="chromeframe">Estás usando un navegador <strong>desfasado</strong>. Por favor <a href="http://browsehappy.com/">actualice su navegador</a> o <a href="http://www.google.com/chromeframe/?redirect=true">active Google Chrome Frame</a> para mejorar su experiencia.</p>
+<![endif]-->
+
+<header>
+	<div class="inner">
+		<h1>Xfce Installer</h1>
+		<h2>{{subtitle}}</h2>
+		<div class="language">
+			<label>Language / Idioma </label>
+			<select onchange="changeLanguage(this.value)">
+				<option value="en" {{selectedEnglish}}>English</option>
+				<option value="es" {{selectedSpanish}}>Español</option>
+			</select>
+		</div>
+	
+		<a href="https://github.com/cesar-rgon/xfce-installer" target="_blank" class="button">
+			<small>{{githubProyect}}</small>GitHub
+		</a>
+	
+		<div id="sse2">
+			<div id="sses2">
+				<ul>
+					{{#each optionsMenu}}
+						<li><a href={{url}} target={{target}}>{{title}}</a></li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>			
+	</div>
+</header>

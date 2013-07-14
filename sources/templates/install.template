@@ -1,0 +1,19 @@
+<h2>{{prerequisites}}</h2>
+<ul>
+	{{#each prerequisiteList}}
+		<li>{{{prerequisite}}}.</li>
+	{{/each}}
+</ul><br />
+
+<h2>{{installation}}</h2>
+<div class="installation">
+	<label>{{installationDescription}}</label>
+	<pre><code>$ sudo apt-get install git
+$ git clone --single-branch https://github.com/cesar-rgon/xfce-installer.git
+$ cd xfce-installer
+$ sudo ./install.sh</code></pre>
+	
+	{{#each imageList}}
+		<img src={{source}} alt={{description}}/>
+	{{/each}}
+</div>
