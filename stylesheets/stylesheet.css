@@ -536,9 +536,9 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
     padding-right: 0;
     margin-left: 0;
   }
-    #instalation img {
-        max-width: 488px;
-    }
+  #instalation img {
+	max-width: 488px;
+  }
 }
 
 /* All Mobile Sizes (devices and browser) */
@@ -594,9 +594,10 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
     padding: 20px 0;
     min-height: 0;
   }
-  aside#sidebar a.button {
-    display: none;
+  aside#sidebar a.button, aside#sidebar p, aside#sidebar img, aside#sidebar #acdnmenu {
+	display: none;
   }
+    
   #main-content h1:before,
   #main-content h2:before,
   #main-content h3:before,
