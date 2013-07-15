@@ -9,20 +9,20 @@ var installData = {
 	installation: "Installation",
 	installationDescription: "Install git, clone repository and run script",
 	imageList: [
-		{source: "../../images/installation/en/install-02.jpg", description: "Pantalla nombre usuario"},
-		{source: "../../images/installation/en/install-03.jpg", description: "Características ordenador"},
-		{source: "../../images/installation/en/install-04.jpg", description: "Instalar Lightdm"},
-		{source: "../../images/installation/en/install-05.jpg", description: "Compresores - descompresores"},
-		{source: "../../images/installation/en/install-06.jpg", description: "Desarrollo - programación"},
-		{source: "../../images/installation/en/install-07.jpg", description: "Descargas"},
-		{source: "../../images/installation/en/install-08.jpg", description: "Utilidades escritorio"},
-		{source: "../../images/installation/en/install-09.jpg", description: "Juegos"},
+		{source: "../../images/installation/en/install-02.jpg", description: "Username screen"},
+		{source: "../../images/installation/en/install-03.jpg", description: "Computer features"},
+		{source: "../../images/installation/en/install-04.jpg", description: "Install LightDM"},
+		{source: "../../images/installation/en/install-05.jpg", description: "Compressors - Uncompressors"},
+		{source: "../../images/installation/en/install-06.jpg", description: "Development"},
+		{source: "../../images/installation/en/install-07.jpg", description: "Downloads"},
+		{source: "../../images/installation/en/install-08.jpg", description: "Desktop tools"},
+		{source: "../../images/installation/en/install-09.jpg", description: "Games"},
 		{source: "../../images/installation/en/install-10.jpg", description: "Multimedia"},
-		{source: "../../images/installation/en/install-11.jpg", description: "Oficina"},
-		{source: "../../images/installation/en/install-12.jpg", description: "Sistema"},
+		{source: "../../images/installation/en/install-11.jpg", description: "Office"},
+		{source: "../../images/installation/en/install-12.jpg", description: "System"},
 		{source: "../../images/installation/en/install-13.jpg", description: "Internet"},
-		{source: "../../images/installation/en/install-14.jpg", description: "Acciones post-instalación"},
-		{source: "../../images/installation/en/install-15.jpg", description: "Resumen instalación"}	
+		{source: "../../images/installation/en/install-14.jpg", description: "Post-installation actions"},
+		{source: "../../images/installation/en/install-15.jpg", description: "Installation summary"}	
 	]
 }
 
