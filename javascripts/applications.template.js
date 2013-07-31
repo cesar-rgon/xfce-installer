@@ -88,7 +88,7 @@ function program5(depth0,data) {
   buffer += "<aside id=\"applicationSidebar\">\r\n	<div id=\"menuwrapper\" class=\"absolutePosition\">\r\n		<ul>\r\n			";
   stack1 = helpers.each.call(depth0, depth0.categoryList, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n			<li id=\"lastIndex\"><a href=\"?ga=off\">";
+  buffer += "\r\n			<li id=\"lastIndex\"><a href=\"#header-template\">";
   if (stack1 = helpers.moveUp) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.moveUp; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

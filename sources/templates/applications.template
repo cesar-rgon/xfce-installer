@@ -10,7 +10,7 @@
 				</ul>
 			</li>
 			{{/each}}
-			<li id="lastIndex"><a href="?ga=off">{{moveUp}}</a></li>
+			<li id="lastIndex"><a href="#header-template">{{moveUp}}</a></li>
 		</ul>
 	</div>
 </aside>
