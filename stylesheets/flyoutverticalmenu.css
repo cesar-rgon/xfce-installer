@@ -67,7 +67,7 @@
     display:none;
 	border: 3px solid #3372c9;
 	border-radius: 10px;
-	padding: 0 15px 5px 0;
+	padding: 1px 0 5px 7px;
 	-moz-box-shadow:    -3px 3px 5px 2px #bbb;
 	-webkit-box-shadow: -3px 3px 5px 2px #bbb;
 	box-shadow:         -3px 3px 5px 2px #bbb;
