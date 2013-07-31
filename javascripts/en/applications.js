@@ -3,8 +3,10 @@ var applicationData = {
 	mainDescription: "Application list that can be selected by user during script's installation process",
 	categoryText: "Category",
 	homepageText: "Homepage",
+	moveUp: "Move up",
 	categoryList: [
 		{ category: "Accessories",
+		  categoryCssClass: "accessories",
 		  applicationList: [
 			{name: "Alacarte Menu Editor", image: "../../images/applications/alacarte.jpg", homepage: "https://launchpad.net/alacarte", description: "Application launchers editor for desktop panel menu", id: "a1"},
 			{name: "Application Finder", image: "../../images/applications/application-finder.jpg", homepage: "http://docs.xfce.org/xfce/xfce4-appfinder/start", description: "Search applications by name", id: "a2"},
@@ -21,6 +23,7 @@ var applicationData = {
 		  ]
 		},
 		{ category: "Development",
+		  categoryCssClass: "development",
 		  applicationList: [
 			{name: "Bluefish", image: "../../images/applications/bluefish.jpg", homepage: "http://bluefish.openoffice.nl/index.html", description: "Advanced editor for web development", id: "a13"},
 			{name: "Geany", image: "../../images/applications/geany.jpg", homepage: "http://www.geany.org/", description: "Advanced text editor for edition and programming", id: "a14"},
@@ -28,22 +31,26 @@ var applicationData = {
 		  ]
 		},
 		{ category: "Education",
+		  categoryCssClass: "education",
 		  applicationList: [
 			{name: "Klavaro", image: "../../images/applications/klavaro.jpg", homepage: "http://klavaro.sourceforge.net/en/", description: "Typing course", id: "a16"}
 		  ]
 		},
 		{ category: "Games",
+		  categoryCssClass: "games",
 		  applicationList: [
 			{name: "Steam", image: "../../images/applications/steam.jpg", homepage: "http://store.steampowered.com/?l=english", description: "Online games platform", id: "a40"}
 		  ]		
 		},			
 		{ category: "Graphics",
+		  categoryCssClass: "graphics",
 		  applicationList: [
 			{name: "Gimp", image: "../../images/applications/gimp.jpg", homepage: "http://www.gimp.org/", description: "Advanced image editor", id: "a17"},
 			{name: "Gpicview", image: "../../images/applications/gpicview.jpg", homepage: "http://lxde.sourceforge.net/gpicview/", description: "Light image viewer", id: "a18"}
 		  ]		
 		},
 		{ category: "Internet",
+		  categoryCssClass: "internet",
 		  applicationList: [
 			{name: "aMule", image: "../../images/applications/amule.jpg", homepage: "http://amule.forumer.com/index.php", description: "P2P download client for eDonkey links", id: "a19"},
 			{name: "Chrome", image: "../../images/applications/chrome.jpg", homepage: "https://www.google.com/intl/en/chrome/browser/", description: "Google´s web browser", id: "a20"},
@@ -69,6 +76,7 @@ var applicationData = {
 		  ]		
 		},
 		{ category: "Multimedia",
+		  categoryCssClass: "multimedia",
 		  applicationList: [
 			{name: "Audacious", image: "../../images/applications/audacious.jpg", homepage: "http://audacious-media-player.org/", description: "MP3 audio player similar to WinAmp", id: "a41"},
 			{name: "Clementine", image: "../../images/applications/clementine.jpg", homepage: "http://www.clementine-player.org/en/", description: "Complete music library and audio player", id: "a42"},
@@ -83,6 +91,7 @@ var applicationData = {
 		  ]		
 		},
 		{ category: "Office",
+		  categoryCssClass: "office",
 		  applicationList: [
 			{name: "Abiword", image: "../../images/applications/abiword.jpg", homepage: "http://www.abisource.com/", description: "Light text document editor", id: "a51"},
 			{name: "Calibre", image: "../../images/applications/calibre.jpg", homepage: "http://calibre-ebook.com/", description: "Viewer, converter and cataloger of ebooks", id: "a52"},
@@ -97,6 +106,7 @@ var applicationData = {
 		  ]		
 		},
 		{ category: "System",
+		  categoryCssClass: "system",
 		  applicationList: [
 			{name: "Bleachbit", image: "../../images/applications/bleachbit.jpg", homepage: "http://bleachbit.sourceforge.net/", description: "System clean tool", id: "a61"},
 			{name: "Compiz", image: "../../images/applications/compiz.jpg", homepage: "http://www.compiz.org/", description: "OpenGL compositing manager with desktop effects", id: "a64"},

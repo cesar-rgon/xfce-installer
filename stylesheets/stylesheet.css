@@ -78,6 +78,7 @@ header h2 {
   border-radius: 10px;
 }
 
+aside#applicationSidebar,
 aside#sidebar {
   width: 200px;
   padding-left: 20px;
@@ -88,6 +89,8 @@ aside#sidebar {
   line-height: 1.3;
 }
 
+aside#applicationSidebar p.repo-owner,
+aside#applicationSidebar p.repo-owner a,
 aside#sidebar p.repo-owner,
 aside#sidebar p.repo-owner a {
   font-weight: bold;
@@ -539,6 +542,9 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
   #instalation img {
 	max-width: 488px;
   }
+  aside#applicationSidebar {
+	display: none;
+  }
 }
 
 /* All Mobile Sizes (devices and browser) */
@@ -583,10 +589,12 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
     display: inline;
   }
   #main-content,
+  aside#applicationSidebar,
   aside#sidebar {
     float: none;
     width: 100% ! important;
   }
+  aside#applicationSidebar,
   aside#sidebar {
     background-image: none;
     margin-top: 20px;
@@ -594,7 +602,8 @@ div.navBulletsWrapper div.active {background-position:0 -11px;}
     padding: 20px 0;
     min-height: 0;
   }
-  aside#sidebar a.button, aside#sidebar p, aside#sidebar img, aside#sidebar #acdnmenu {
+  aside#applicationSidebar,
+  aside#sidebar a.button, aside#sidebar p, aside#sidebar img {
 	display: none;
   }
     

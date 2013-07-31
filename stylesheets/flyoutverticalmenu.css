@@ -1,0 +1,126 @@
+.fixedPosition { top: 10px; position: fixed; }
+.absolutePosition { position: relative; }
+#menuwrapper .accessories ul { width: 290px; }
+#menuwrapper .development ul { width: 150px; top: -20px;}
+#menuwrapper .education ul { width: 150px; top: -3px;}
+#menuwrapper .games ul { width: 150px; top: -4px;}
+#menuwrapper .graphics ul { width: 150px; top: -12px;}
+#menuwrapper .internet ul { width: 430px; top: -54px;}
+#menuwrapper .multimedia ul { width: 290px; top: -37px;}
+#menuwrapper .office ul { width: 290px; top: -49px;}
+#menuwrapper .system ul { width: 440px; top: -111px;}
+
+#menuwrapper ul {
+	width: 200px;
+	height: auto;
+}
+/* We remove the margin, padding, and list style of UL and LI components */
+#menuwrapper ul, #menuwrapper ul li{
+	float: right;
+	text-align: center;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+ 
+#menuwrapper ul li{
+	width: 200px;
+	border: 2px solid #DEDEDE;
+	border-radius: 8px;
+    font-family:Verdana;
+    font-size:12px;
+    background-color:#3372c9;
+	margin-top:2px;
+    cursor:pointer;
+}
+
+#menuwrapper #lastIndex {
+	background: #fafafa;
+}
+
+#menuwrapper #lastIndex a {
+	padding:1px 15px;
+	font-weight: bold;
+    display: block;	
+}
+
+/* We apply the background hover color when user hover the mouse over of the li component */
+#menuwrapper ul li:hover{
+	background: #036 url('../images/menu-bar/mb2_2.gif') no-repeat center bottom;
+    position:relative;
+}
+
+/* We apply the link style */
+#menuwrapper ul li label{
+    padding:3px 15px;
+    color: #fafafa;
+    display:inline-block;
+	cursor:pointer;
+}
+ 
+/**** SECOND LEVEL MENU ****/
+/* We make the position to absolute for flyout menu and hidden the ul until the user hover the parent li item */
+#menuwrapper ul li ul{
+	float: right;
+	right: 202px;
+    position:absolute;
+    display:none;
+	border: 3px solid #3372c9;
+	border-radius: 10px;
+	padding: 0 15px 5px 0;
+	-moz-box-shadow:    -3px 3px 5px 2px #bbb;
+	-webkit-box-shadow: -3px 3px 5px 2px #bbb;
+	box-shadow:         -3px 3px 5px 2px #bbb;
+}
+ 
+/* When user has hovered the li item, we show the ul list by applying display:block.  */
+#menuwrapper ul li:hover  > ul{
+	display: inline-block;
+	background:#fafafa;
+}
+ 
+/* we apply different background color to 2nd level menu items*/
+#menuwrapper ul li ul li{
+	float: left;
+	display: inline-block;
+	text-align: center;
+	width: 140px;
+	border: 0;
+	background:#fafafa;
+}
+ 
+/* We change the background color for the level 2 submenu when hovering the menu */
+#menuwrapper ul li:hover ul li:hover{
+    background: #fafafa;
+	text-decoration: underline;
+}
+ 
+/* We style the color of level 2 links */
+#menuwrapper ul li ul li a{
+	font-family: Arial;
+    font-size:11px;
+    color:#3c3c3c;
+    display: inline;
+    width:80px;
+}
+
+  /* Left arrow */
+ #menuwrapper .arrow {
+    position: relative; }
+    #menuwrapper .arrow:after, #menuwrapper .arrow > ul > .arrow:hover:after {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 9px;
+      position: absolute;
+      right: 185px;
+      top: 50%;
+      margin-top: -5px;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAJCAMAAAA8eE0hAAAAUVBMVEX////MzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzNzc3l5eXg4ODZ2dnMzMzi4uLS0tLe3t7Q0NDV1dXj4+PW1tbk5OTc3NzPz8/R0dH0Zv5RAAAAC3RSTlMAM2YekAmlPHuEAwArv7wAAAA/SURBVHheY2Dl5mdigABGKV5BNnYok4dHQpKFGcrkEefj5gAzQUBABM7kFYQyRcX4mUBMkEpOLrA2IWGwfgYAn0UDZszv8IwAAAAASUVORK5CYII=);
+      -moz-transform: rotate(180deg);
+      -o-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      -webkit-transform: rotate(180deg);
+      transform: rotate(180deg); }
+    #menuwrapper .arrow > ul > .arrow:after, #menuwrapper .arrow:hover:after {
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAJCAMAAAA8eE0hAAAAUVBMVEX////d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3e3t729vbx8fHq6urd3d3z8/Pj4+Pv7+/h4eHm5ub09PTn5+f19fXt7e3g4ODi4uLUsVdlAAAAC3RSTlMAM2YekAmlPHuEAwArv7wAAAA/SURBVHheY2Dl5mdigABGKV5BNnYok4dHQpKFGcrkEefj5gAzQUBABM7kFYQyRcX4mUBMkEpOLrA2IWGwfgYAn0UDZszv8IwAAAAASUVORK5CYII=); }

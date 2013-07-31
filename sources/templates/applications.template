@@ -1,8 +1,8 @@
-<aside id="sidebar">
-	<div id="acdnmenu">
+<aside id="applicationSidebar">
+	<div id="menuwrapper" class="absolutePosition">
 		<ul>
 			{{#each categoryList}}
-			<li>{{category}}
+			<li class="arrow {{categoryCssClass}}"><label>{{category}}</label>
 				<ul>
 					{{#each applicationList}}
 						<li><a href="#{{id}}">{{name}}</a></li>
@@ -10,6 +10,7 @@
 				</ul>
 			</li>
 			{{/each}}
+			<li id="lastIndex"><a href="?ga=off">{{moveUp}}</a></li>
 		</ul>
 	</div>
 </aside>

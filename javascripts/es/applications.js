@@ -3,8 +3,10 @@ var applicationData = {
 	mainDescription: "Listado de aplicaciones que puede seleccionar el usuario durante el proceso de instalación del script",
 	categoryText: "Categoría",
 	homepageText: "Página Web",
+	moveUp: "Subir",
 	categoryList: [
 		{ category: "Accesorios",
+		  categoryCssClass: "accessories",
 		  applicationList: [
 			{name: "Alacarte. Editor de menú", image: "../../images/applications/alacarte.jpg", homepage: "https://launchpad.net/alacarte", description: "Editor de lanzadores en el menú del panel del escritorio", id: "a1"},
 			{name: "Buscador de Aplicaciones", image: "../../images/applications/application-finder.jpg", homepage: "http://docs.xfce.org/xfce/xfce4-appfinder/start", description: "Busca aplicaciones por nombre", id: "a2"},
@@ -21,6 +23,7 @@ var applicationData = {
 		  ]
 		},
 		{ category: "Desarrollo",
+		  categoryCssClass: "development",
 		  applicationList: [
 			{name: "Bluefish", image: "../../images/applications/bluefish.jpg", homepage: "http://bluefish.openoffice.nl/index.html", description: "Editor avanzado para desarrollo web", id: "a13"},
 			{name: "Geany", image: "../../images/applications/geany.jpg", homepage: "http://www.geany.org/", description: "Editor de texto avanzado para edicion y programacion", id: "a14"},
@@ -28,17 +31,20 @@ var applicationData = {
 		  ]
 		},
 		{ category: "Educación",
+		  categoryCssClass: "education",
 		  applicationList: [
 			{name: "Klavaro", image: "../../images/applications/klavaro.jpg", homepage: "http://klavaro.sourceforge.net/en/", description: "Curso de mecanografía", id: "a16"}
 		  ]
 		},
 		{ category: "Gráficos",
+		  categoryCssClass: "graphics",
 		  applicationList: [
 			{name: "Gimp", image: "../../images/applications/gimp.jpg", homepage: "http://www.gimp.org/", description: "Editor de imágenes avanzado", id: "a17"},
 			{name: "Gpicview", image: "../../images/applications/gpicview.jpg", homepage: "http://lxde.sourceforge.net/gpicview/", description: "Visor de imágenes ligero", id: "a18"}
 		  ]		
 		},
 		{ category: "Internet",
+		  categoryCssClass: "internet",
 		  applicationList: [
 			{name: "aMule", image: "../../images/applications/amule.jpg", homepage: "http://amule.forumer.com/index.php", description: "Cliente de descargas P2P para enlaces eDonkey", id: "a19"},
 			{name: "Chrome", image: "../../images/applications/chrome.jpg", homepage: "https://www.google.com/intl/es/chrome/browser/", description: "Navegador web de Google", id: "a20"},
@@ -64,11 +70,13 @@ var applicationData = {
 		  ]		
 		},		
 		{ category: "Juegos",
+		  categoryCssClass: "games",
 		  applicationList: [
 			{name: "Steam", image: "../../images/applications/steam.jpg", homepage: "http://store.steampowered.com/?l=spanish", description: "Plataforma de juegos online", id: "a40"}
 		  ]		
 		},	
 		{ category: "Multimedia",
+		  categoryCssClass: "multimedia",
 		  applicationList: [
 			{name: "Audacious", image: "../../images/applications/audacious.jpg", homepage: "http://audacious-media-player.org/", description: "Reproductor de audio MP3 estilo WinAmp", id: "a41"},
 			{name: "Clementine", image: "../../images/applications/clementine.jpg", homepage: "http://www.clementine-player.org/es/", description: "Biblioteca de musica completa y reproductor de audio", id: "a42"},
@@ -83,6 +91,7 @@ var applicationData = {
 		  ]		
 		},
 		{ category: "Oficina",
+		  categoryCssClass: "office",
 		  applicationList: [
 			{name: "Abiword", image: "../../images/applications/abiword.jpg", homepage: "http://www.abisource.com/", description: "Editor ligero de documentos de texto", id: "a51"},
 			{name: "Calibre", image: "../../images/applications/calibre.jpg", homepage: "http://calibre-ebook.com/", description: "Visor, conversor y catalogador de ebooks", id: "a52"},
@@ -97,24 +106,25 @@ var applicationData = {
 		  ]		
 		},		
 		{ category: "Sistema",
+		  categoryCssClass: "system",
 		  applicationList: [
 			{name: "Bleachbit", image: "../../images/applications/bleachbit.jpg", homepage: "http://bleachbit.sourceforge.net/", description: "Utilidad de limpieza del sistema", id: "a61"},
 			{name: "Centro Software Lubuntu", image: "../../images/applications/lubuntu-software-center.jpg", homepage: "https://launchpad.net/lubuntu-software-center", description: "Gestor de programas de Lxde", id: "a62"},
 			{name: "Centro Software Ubuntu", image: "../../images/applications/ubuntu-software-center.jpg", homepage: "https://launchpad.net/software-center", description: "Gestor de programas de Gnome", id: "a63"},
 			{name: "Compiz", image: "../../images/applications/compiz.jpg", homepage: "http://www.compiz.org/", description: "Gestor de composicion Opengl con efectos de escritorio", id: "a64"},
 			{name: "Gdebi", image: "../../images/applications/gdebi.jpg", homepage: "https://launchpad.net/gdebi", description: "Instalador de paquetes Deb", id: "a65"},
-			{name: "Tareas programadas", image: "../../images/applications/gnome-schedule.jpg", homepage: "http://gnome-schedule.sourceforge.net/", description: "Administrador de tareas programadas", id: "a66"},
-			{name: "Log del sistema de Gnome", image: "../../images/applications/logviewer.jpg", homepage: "https://launchpad.net/gnome-system-log", description: "Visor de registro del sistema de Gnome", id: "a67"},
-			{name: "Gparted", image: "../../images/applications/gparted.jpg", homepage: "http://gparted.sourceforge.net/", description: "Herramienta de administración de particiones del disco duro", id: "a68"},
-			{name: "Grub Customizer", image: "../../images/applications/grub-customizer.jpg", homepage: "https://launchpad.net/grub-customizer", description: "Administrador de Grub2", id: "a69"},
-			{name: "Hard Info", image: "../../images/applications/hard-info.jpg", homepage: "http://wiki.hardinfo.org/HomePage", description: "Herramienta de deteccion de hardware", id: "a70"},
-			{name: "Likewise Open", image: "../../images/applications/likewise.jpg", homepage: "http://www.powerbrokeropen.org/", description: "Servicios de autenticacion para dominios del Directorio Activo", id: "a71"},
+			{name: "Gestor de actualizaciones", image: "../../images/applications/update-manager.jpg", homepage: "https://launchpad.net/ubuntu/+source/update-manager", description: "Administrador de actualizaciones del sistema", id: "a66"},
+			{name: "Gparted", image: "../../images/applications/gparted.jpg", homepage: "http://gparted.sourceforge.net/", description: "Herramienta de administración de particiones del disco duro", id: "a67"},
+			{name: "Grub Customizer", image: "../../images/applications/grub-customizer.jpg", homepage: "https://launchpad.net/grub-customizer", description: "Administrador de Grub2", id: "a68"},
+			{name: "Hard Info", image: "../../images/applications/hard-info.jpg", homepage: "http://wiki.hardinfo.org/HomePage", description: "Herramienta de deteccion de hardware", id: "a69"},
+			{name: "Likewise Open", image: "../../images/applications/likewise.jpg", homepage: "http://www.powerbrokeropen.org/", description: "Servicios de autenticacion para dominios del Directorio Activo", id: "a70"},
+			{name: "Log sistema de Gnome", image: "../../images/applications/logviewer.jpg", homepage: "https://launchpad.net/gnome-system-log", description: "Visor de registro del sistema de Gnome", id: "a71"},			
 			{name: "Lxtask. Monitor de sistema", image: "../../images/applications/monitor-sistema.jpg", homepage: "https://launchpad.net/ubuntu/+source/lxtask", description: "Administrador de tareas ligero y monitor del sistema", id: "a72"},
-			{name: "Monitor de sistema de Gnome", image: "../../images/applications/monitor-sistema.jpg", homepage: "https://launchpad.net/ubuntu/+source/gnome-system-monitor", description: "Administrador de tareas y monitor del sistema de Gnome", id: "a73"},
+			{name: "Monitor de Gnome", image: "../../images/applications/monitor-sistema.jpg", homepage: "https://launchpad.net/ubuntu/+source/gnome-system-monitor", description: "Administrador de tareas y monitor del sistema de Gnome", id: "a73"},
 			{name: "Network Manager", image: "../../images/applications/network-manager.jpg", homepage: "http://projects.gnome.org/NetworkManager/", description: "Gestor de perfiles de red cableada e inalambrica", id: "a74"},
 			{name: "Samba", image: "../../images/applications/samba.jpg", homepage: "https://launchpad.net/samba", description: "Servidor de archivos y comparticiones en la red compatible con Windows", id: "a75"},
 			{name: "Synaptic", image: "../../images/applications/synaptic.jpg", homepage: "http://www.nongnu.org/synaptic/", description: "Herramienta gráfica para la gestión de paquetes del sistema", id: "a76"},
-			{name: "Update Manager", image: "../../images/applications/update-manager.jpg", homepage: "https://launchpad.net/ubuntu/+source/update-manager", description: "Administrador de actualizaciones del sistema", id: "a77"},
+			{name: "Tareas programadas", image: "../../images/applications/gnome-schedule.jpg", homepage: "http://gnome-schedule.sourceforge.net/", description: "Administrador de tareas programadas", id: "a77"},
 			{name: "Usuarios y Grupos", image: "../../images/applications/users-groups.jpg", homepage: "https://launchpad.net/ubuntu/+source/gnome-system-tools", description: "Herramienta gráfica para gestión de usuarios del sistema", id: "a78"},
 			{name: "Virtualbox", image: "../../images/applications/virtual-box.jpg", homepage: "https://www.virtualbox.org/", description: "Virtualizacion para diferentes sistemas operativos", id: "a79"},
 			{name: "Wine", image: "../../images/applications/wine.jpg", homepage: "http://www.winehq.org/", description: "Emulador de software de Windows", id: "a80"},

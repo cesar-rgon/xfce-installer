@@ -8,11 +8,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n			<li>";
+  buffer += "\r\n			<li class=\"arrow ";
+  if (stack1 = helpers.categoryCssClass) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.categoryCssClass; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"><label>";
   if (stack1 = helpers.category) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.category; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\r\n				<ul>\r\n					";
+    + "</label>\r\n				<ul>\r\n					";
   stack1 = helpers.each.call(depth0, depth0.applicationList, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n				</ul>\r\n			</li>\r\n			";
@@ -81,10 +85,14 @@ function program5(depth0,data) {
   return buffer;
   }
 
-  buffer += "<aside id=\"sidebar\">\r\n	<div id=\"acdnmenu\">\r\n		<ul>\r\n			";
+  buffer += "<aside id=\"applicationSidebar\">\r\n	<div id=\"menuwrapper\" class=\"absolutePosition\">\r\n		<ul>\r\n			";
   stack1 = helpers.each.call(depth0, depth0.categoryList, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n		</ul>\r\n	</div>\r\n</aside>\r\n\r\n<section id=\"main-content\">\r\n	<h2>";
+  buffer += "\r\n			<li id=\"lastIndex\"><a href=\"?ga=off\">";
+  if (stack1 = helpers.moveUp) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.moveUp; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</a></li>\r\n		</ul>\r\n	</div>\r\n</aside>\r\n\r\n<section id=\"main-content\">\r\n	<h2>";
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
