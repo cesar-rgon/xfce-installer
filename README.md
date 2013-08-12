@@ -1,4 +1,4 @@
-# Xfce Installer v1.11
+# Xfce Installer v1.1.2
 Xfce desktop installer script for home, office or server computers with a great variety of programs to install.
 This script installs Xfce desktop and a set of programs according to user needs starting from an Ubuntu Server base system.
 
@@ -25,7 +25,7 @@ This script installs Xfce desktop and a set of programs according to user needs 
 * Automatic installation of third-party repositories.
 
 
-# Instalador Xfce v1.11
+# Instalador Xfce v1.1.2
 Script instalador del escritorio Xfce en hogar, oficina o servidor con gran variedad de programas para instalar.
 Este script instala el escritorio Xfce y un conjunto de programas conforme a las necesidades del usuario a partir del sistema base Ubuntu Server.
 

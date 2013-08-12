@@ -6,8 +6,8 @@ function initVariables()
 {
 	author="Cesar Rodriguez Gonzalez"
 	englishTranslationAuthors="Cesar Rodriguez Gonzalez. Isidro Rodriguez Gonzalez"
-	version="1.11"
-	lastDateModified="08-07-2013"
+	version="1.1.2"
+	lastDateModified="12-08-2013"
 	ubuntuVersion=`lsb_release -rs`
 	dialogWidth=$((`tput cols` - 4))
 	dialogHeight=$((`tput lines` - 6))
@@ -232,6 +232,7 @@ fi
 ########################################################################################################################
 initVariables
 mkdir $tempDir
+chmod 777 $tempDir
 # Repair previous wrong installation process, if this was the case
 echo "   $terminalMessage5 ..."
 dpkg --configure -a >/dev/null 2>>$logFile
@@ -592,7 +593,7 @@ system=`dialog --title "$title" --backtitle "$description" --stdout --separate-o
 16 "$jockeyDescription" on \
 17 "$powerManagerDescription" on \
 18 "$scheduleDescription" on \
-29 "$userSettingsDescription" on \
+19 "$userSettingsDescription" on \
 20 "$virtualboxDescription" off`
 
 if [ $? -eq 0 ]
