@@ -7,7 +7,7 @@ var installData = {
 		{prerequisite: "User login on terminal to start installation steps"}
 	],
 	installation: "Installation",
-	installationDescription: "Install git, clone repository and run script",
+	installationDescription: "Download script, uncompress it and run it",
 	imageList: [
 		{source: "../../images/installation/en/install-02.jpg", description: "Username screen"},
 		{source: "../../images/installation/en/install-03.jpg", description: "Computer features"},

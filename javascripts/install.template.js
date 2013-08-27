@@ -46,7 +46,7 @@ function program3(depth0,data) {
   if (stack1 = helpers.installationDescription) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.installationDescription; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</label>\r\n	<pre><code>$ sudo apt-get install git\r\n$ git clone --single-branch https://github.com/cesar-rgon/xfce-installer.git\r\n$ cd xfce-installer\r\n$ sudo ./install.sh</code></pre>\r\n	\r\n	";
+    + "</label>\r\n	<pre><code>$ wget https://github.com/cesar-rgon/xfce-installer/archive/master.tar.gz\r\n$ tar -xvf master.tar.gz\r\n$ cd xfce-installer-master\r\n$ sudo ./install.sh</code></pre>\r\n	\r\n	";
   stack1 = helpers.each.call(depth0, depth0.imageList, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
