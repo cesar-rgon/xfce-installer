@@ -1,0 +1,14 @@
+button-title=Menú de aplicaciones
+button-icon=start-here-ubuntu-symbolic
+show-button-title=false
+show-button-icon=true
+launcher-show-name=true
+launcher-show-description=true
+hover-switch-category=false
+category-icon-size=1
+item-icon-size=2
+favorites=exo-terminal-emulator.desktop,exo-file-manager.desktop,exo-mail-reader.desktop,exo-web-browser.desktop
+recent=xfce-ui-settings.desktop,synaptic.desktop,exo-terminal-emulator.desktop,xfce-session-settings.desktop
+menu-width=400
+menu-height=500
+

@@ -1,4 +1,4 @@
-# Xfce Installer v1.1.2
+# Xfce Installer v1.2
 Xfce desktop installer script for home, office or server computers with a great variety of programs to install.
 This script installs Xfce desktop and a set of programs according to user needs starting from an Ubuntu Server base system.
 
@@ -15,7 +15,7 @@ This script installs Xfce desktop and a set of programs according to user needs 
 ### Why use this script over other alternatives?
 * Not a distro. It's a script. Quick to download it and use it.
 * It's valid for homes, offices and servers.
-* It can be installed on different versions of Ubuntu: 12.04 and 13.04.
+* It can be installed on different versions of Ubuntu: 12.04, 13.04 and 13.10.
 * Lower consumption of system hardware resources.
 * Greater customization of applications to install.
 * Ubuntu Server offers more maintenance period than a conventional Ubuntu desktop version.
@@ -25,7 +25,7 @@ This script installs Xfce desktop and a set of programs according to user needs 
 * Automatic installation of third-party repositories.
 
 
-# Instalador Xfce v1.1.2
+# Instalador Xfce v1.2
 Script instalador del escritorio Xfce en hogar, oficina o servidor con gran variedad de programas para instalar.
 Este script instala el escritorio Xfce y un conjunto de programas conforme a las necesidades del usuario a partir del sistema base Ubuntu Server.
 
@@ -42,7 +42,7 @@ Este script instala el escritorio Xfce y un conjunto de programas conforme a las
 ### ¿Por que usar este script frente a otras alternativas?
 * No es una distro. Es un script. Rapido de descargar y usar.
 * Es valido para hogares, oficinas y servidores.
-* Se puede instalar en diferentes versiones de Ubuntu: 12.04 y 13.04.
+* Se puede instalar en diferentes versiones de Ubuntu: 12.04, 13.04 y 13.10.
 * Menor consumo de recursos hardware del sistema.
 * Mayor personalizacion de aplicaciones a instalar.
 * Ubuntu Server ofrece más periodo de mantenimiento que una versión convencional de escritorio de Ubuntu.

@@ -3,6 +3,7 @@ user=`whoami`
 ubuntuVersion=`lsb_release -rs`
 pyloadInstalled=%PYLOADINSTALLED%
 systemMonitorInstalled=%SYSTEMMONITORINSTALLED%
+whiskermenuInstalled=%WHISKERMENUINSTALLED%
 
 # Show notification dialog box.
 zenity --notification --window-icon="info" --text "%MESSAGE1%" --timeout=1
@@ -29,11 +30,7 @@ else
 fi
 
 # Set default title bar theme
-if [[ $ubuntuVersion == "13"* ]]; then
-	xfconf-query -c xfwm4 -p "/general/theme" -t string -s "Blackbird" --create
-else
-	xfconf-query -c xfwm4 -p "/general/theme" -t string -s "Bluebird" --create
-fi
+xfconf-query -c xfwm4 -p "/general/theme" -t string -s "Greybird" --create
 
 # Set terminal's color config (text-color: white, background-color: black). It takes effect only on Gnome's terminal.
 gconftool-2 --type bool --set /apps/gnome-terminal/profiles/Default/use_theme_colors false
@@ -63,6 +60,9 @@ xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>
 xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>Left" -t string -s "move_window_left_workspace_key" --create
 xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>Right" -t string -s "move_window_right_workspace_key" --create
 xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>Up" -t string -s "move_window_up_workspace_key" --create
+if [ $whiskermenuInstalled -eq 1 ]; then
+	xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Super>" -t string -s "xfce4-popup-whiskermenu" --create
+fi
 
 # Start language selector for completing installation of default language or install new ones.
 gnome-language-selector &
@@ -83,3 +83,4 @@ fi
 mkdir -p /home/$user/.config/autostart/
 echo '[Desktop Entry]' > /home/$user/.config/autostart/xfce4-config.desktop
 echo 'Hidden=true' >> /home/$user/.config/autostart/xfce4-config.desktop
+
