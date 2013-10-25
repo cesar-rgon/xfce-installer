@@ -26,7 +26,7 @@ var indexData = {
 	benefitList: [
 		{benefit: "No es una <a href='http://es.wikipedia.org/wiki/Distribuci%C3%B3n_Linux' target='_blank'>distro</a>. Es un script. Rápido de descargar y usar"},
 		{benefit: "Es válido para hogares, oficinas y servidores"},
-		{benefit: "Se puede instalar en diferentes versiones de Ubuntu: 12.04 y 13.04"},
+		{benefit: "Se puede instalar en diferentes versiones de Ubuntu: 12.04, 13.04 y 13.10"},
 		{benefit: "Menor consumo de recursos <a href='http://es.wikipedia.org/wiki/Hardware' target='_blank'>hardware</a> del sistema"},
 		{benefit: "Mayor personalización de aplicaciones a instalar"},
 		{benefit: "Ubuntu Server ofrece más periodo de mantenimiento que una versión convencional de escritorio"},

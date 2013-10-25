@@ -1,7 +1,7 @@
 var installData = {
 	prerequisites: "Prerrequisitos",
 	prerequisiteList: [
-		{prerequisite: "<a href='http://www.ubuntu.com/download/server' target='_blank'>Descargar Ubuntu Server</a> 12.04 ó 13.04 desde la <a href='http://www.ubuntu.com/' target='_blank'>web de Ubuntu</a>"},
+		{prerequisite: "<a href='http://www.ubuntu.com/download/server' target='_blank'>Descargar Ubuntu Server</a> 12.04 ó 13.10 desde la <a href='http://www.ubuntu.com/' target='_blank'>web de Ubuntu</a>"},
 		{prerequisite: "<a href='http://www.forat.info/2008/07/07/servidor-en-linux-ubuntu-server-vol-2-sistema-operativo/' target='_blank'>Instalar Ubuntu Server</a> de 32 ó 64 bits (recomendado sin escritorio alguno)"},
 		{prerequisite: "<a href='http://www.forat.info/2008/07/10/servidor-en-linux-ubuntu-server-vol-3-configuracion-de-red/' target='_blank'>Configurar la conexión de red e internet.</a>"},
 		{prerequisite: "Iniciar sesión de usuario en terminal para comenzar pasos de instalación"}
@@ -9,8 +9,9 @@ var installData = {
 	installation: "Instalación",
 	installationDescription: "Descargar script, descomprimirlo y ejecutarlo",
 	imageList: [
-		{source: "../../images/installation/es/install-02.jpg", description: "Pantalla nombre usuario"},
-		{source: "../../images/installation/es/install-03.jpg", description: "Características ordenador"},
+		{source: "../../images/installation/es/install-01.jpg", description: "Pantalla nombre usuario"},
+		{source: "../../images/installation/es/install-02.jpg", description: "Características ordenador"},
+		{source: "../../images/installation/es/install-03.jpg", description: "Perfiles de instalacion"},
 		{source: "../../images/installation/es/install-04.jpg", description: "Instalar Lightdm"},
 		{source: "../../images/installation/es/install-05.jpg", description: "Compresores - descompresores"},
 		{source: "../../images/installation/es/install-06.jpg", description: "Desarrollo - programación"},
