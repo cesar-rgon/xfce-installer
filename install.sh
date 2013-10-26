@@ -168,7 +168,7 @@ function initVariables()
 
 	#faenzaRepository=("add-apt-repository -y ppa:tiheum/equinox 2>&1" "$faenzaRepositoryDescription")
 	#faenzaRepository[0]+=";sed -i \"s/ main/ main #$faenzaRepositoryDescription/g\" /etc/apt/sources.list.d/tiheum-equinox*.list"
-	faenzaRepository=("" $faenzaRepositoryDescription)
+	faenzaRepository=("" "$faenzaRepositoryDescription")
 	faenzaRepository[0]="apt-key add ./conf/faenza.key ; "
 	faenzaRepository[0]+="echo \"deb http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #$faenzaRepositoryDescription\" > /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
 	faenzaRepository[0]+="echo \"deb-src http://ppa.launchpad.net/tiheum/equinox/ubuntu precise main #$faenzaRepositoryDescription\" >> /etc/apt/sources.list.d/tiheum-equinox-precise.list ; "
