@@ -2,6 +2,12 @@
 Xfce desktop installer script for home, office or server computers with a great variety of programs to install.
 This script installs Xfce desktop and a set of programs according to user needs starting from an Ubuntu Server base system.
 
+### Author notes
+I have developed a new project as an evolution from this one.  
+It's more generic, valid for all Ubuntu desktops and server. Tested on 14.04 LTS.  
+Link: [https://github.com/cesar-rgon/app-installer](https://github.com/cesar-rgon/app-installer)
+
+
 ### Main features
 * Installs Xfce desktop with necessary packages.
 * Unattended installation of applications.
@@ -28,6 +34,11 @@ This script installs Xfce desktop and a set of programs according to user needs 
 # Instalador Xfce v1.2
 Script instalador del escritorio Xfce en hogar, oficina o servidor con gran variedad de programas para instalar.
 Este script instala el escritorio Xfce y un conjunto de programas conforme a las necesidades del usuario a partir del sistema base Ubuntu Server.
+
+### Notas del autor
+He desarrollado un nuevo proyecto que evoluciona a partir de este.  
+Es mas generico, valido para todos los escritorios de Ubuntu y tambien servidor. Probado en v14.04 LTS.  
+Enlace: [https://github.com/cesar-rgon/app-installer](https://github.com/cesar-rgon/app-installer)
 
 ### Caracteristicas principales
 * Instala el escritorio Xfce con los paquetes necesarios.
