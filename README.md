@@ -4,8 +4,8 @@ This script installs Xfce desktop and a set of programs according to user needs 
 
 ### Author notes
 I have developed a new project as an evolution from this one.  
-It's more generic, valid for all Ubuntu desktops and server. Tested on 14.04 LTS.  
-Link: [https://github.com/cesar-rgon/app-installer](https://github.com/cesar-rgon/app-installer)
+It's more generic, valid for all Ubuntu, Debian, Linux Mint and LMDE (desktops and server).  
+Link: [https://github.com/cesar-rgon/linux-app-installer](https://github.com/cesar-rgon/linux-app-installer)
 
 
 ### Main features
